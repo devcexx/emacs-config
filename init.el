@@ -29,9 +29,9 @@
   (package-install 'use-package))
 
 ;; Theme loading
-(use-package flatland-black-theme
+(use-package darkokai-theme
   :ensure t
-  :config (load-theme 'flatland-black t))
+  :config (load-theme 'darkokai t))
 
 ;; WindMove: move between buffers using shift+arrows
 (when (fboundp 'windmove-default-keybindings)
