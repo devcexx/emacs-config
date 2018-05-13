@@ -81,12 +81,12 @@
 (use-package company
   :ensure t
   :config
-  (add-hook 'after-init-hook 'global-company-mode)
   (setq company-idle-delay 0)
   
   :bind
   ("C-c SPC" . company-complete)
   ("C-c C-SPC" . company-complete))
+(add-hook 'after-init-hook 'global-company-mode)
 
 ;; Magit: Git client
 (use-package magit
