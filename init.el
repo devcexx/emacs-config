@@ -33,6 +33,17 @@
   :ensure t
   :config (load-theme 'darkokai t))
 
+(use-package smart-mode-line
+  :ensure t)
+
+(use-package smart-mode-line-powerline-theme
+  :ensure t
+  :after smart-mode-line
+  :config
+  (setq sml/no-confirm-load-theme t)
+  (sml/setup)
+  (sml/apply-theme 'powerline))
+
 ;; WindMove: move between buffers using shift+arrows
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
