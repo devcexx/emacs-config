@@ -124,9 +124,26 @@
 ;; js2-mode: Javascript integration
 (use-package js2-mode
   :ensure t
-  :bind (("C-x n" . js2-next-error))
-  )
+  :bind (("C-x n" . js2-next-error)))
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-jsx-mode))
+
+;; rust-mode: Rust integration
+(use-package rust-mode
+  :ensure t)
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+
+;; racer: Rust completion through Racer
+;; (requires installing Rust source code and racer):
+;; $ rustup component add rust-src
+;; $ cargo install racer
+;; May be required to set the RUST_SRC_PATH variable environment to
+;; the path where it's located the Rust source code on the system
+(use-package racer
+  :ensure t
+  :bind (("C-?" . racer-describe)))
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'racer-mode-hook #'eldoc-mode)
+
 
 (defun kill-buffers()
   (let (buffer buffers)
