@@ -1,4 +1,4 @@
-;;; package --- Summary
+;;; init.el --- Emacs initialization file
 ;;; Commentary:
 ;;; Code:
 
@@ -33,6 +33,12 @@
   :ensure t
   :config (load-theme 'darkokai t))
 
+;; Configure status bar
+(custom-set-variables
+'(display-time-24hr-format t)
+'(display-time-default-load-average nil)
+'(display-time-mode t))
+
 (use-package smart-mode-line
   :ensure t)
 
@@ -41,6 +47,20 @@
   :after smart-mode-line
   :config
   (setq sml/no-confirm-load-theme t)
+  (setq sml/name-width 15)
+  (setq powerline-height 20)
+  
+  (set-face-attribute 'powerline-active1 nil :foreground "#FFFFFF" :background "DarkOrange")
+  (set-face-attribute 'powerline-active2 nil :foreground "#FFFFFF" :background "#000000")
+
+  (custom-set-faces
+   '(sml/filename ((t (:inherit sml/global :background "DarkOrange" :foreground "Black"))))
+   '(sml/modes ((t (:inherit sml/global :background "#000000" :foreground "White"))))
+   '(sml/position-percentage ((t (:inherit sml/prefix :background "#000000" :foreground "White" :weight normal))))
+   '(sml/prefix ((t (:inherit sml/global :background "DarkOrange" :foreground "Black"))))
+   '(sml/vc ((t (:inherit sml/git :background "#000000" :foreground "#aa0000"))))
+   '(sml/vc-edited ((t (:inherit sml/prefix :background "#000000" :foreground "White")))))
+
   (sml/setup)
   (sml/apply-theme 'powerline))
 
