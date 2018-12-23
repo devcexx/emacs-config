@@ -6,6 +6,9 @@
 (cond ((string-equal system-type "darwin")
        (setq mac-right-option-modifier nil)))
 
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+
 ;; Enable desktop save mode
 (desktop-save-mode 1)
 
