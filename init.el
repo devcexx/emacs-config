@@ -94,7 +94,17 @@
 
 ;; Projectile: project management for Emacs
 (use-package projectile
-  :ensure t)
+  :ensure t
+  :config
+  (projectile-mode)
+  (setq projectile-enable-caching t))
+
+
+(use-package helm-projectile
+  :ensure t
+  :after ((projectile))
+  :bind (("C-c p" . helm-projectile)
+         ("C-c P" . helm-projectile-switch-project)))
 
 ;; Helm: enhaced completion window.
 (use-package helm
