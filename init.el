@@ -193,3 +193,15 @@
 (global-set-key (kbd "C-x C-k") 'clean-buffers)
 
 (provide 'clean-buffers)
+
+(defun delete-current-line ()
+  "Delete (not kill) the current line."
+  (interactive)
+  (save-excursion
+    (delete-region
+     (progn (forward-visible-line 0) (point))
+     (progn (forward-visible-line 1) (point)))))
+
+(global-set-key (kbd "M-k") 'delete-current-line)
+
+(provide 'delete-current-line)
