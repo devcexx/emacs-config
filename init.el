@@ -177,6 +177,11 @@
 (add-hook 'rust-mode-hook #'racer-mode)
 (add-hook 'racer-mode-hook #'eldoc-mode)
 
+(unless (package-installed-p 'elcord)
+  (package-install 'elcord))
+
+(require 'elcord)
+(elcord-mode)
 
 (defun kill-buffers()
   (let (buffer buffers)
