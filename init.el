@@ -195,8 +195,6 @@
   (if (yes-or-no-p "Do you really want to clean all buffers? ")
       (kill-buffers) nil))
 
-(global-set-key (kbd "C-x C-k") 'clean-buffers)
-
 (provide 'clean-buffers)
 
 (defun delete-current-line ()
@@ -206,8 +204,6 @@
     (delete-region
      (progn (forward-visible-line 0) (point))
      (progn (forward-visible-line 1) (point)))))
-
-(global-set-key (kbd "M-k") 'delete-current-line)
 
 (provide 'delete-current-line)
 
@@ -225,4 +221,22 @@
   (yank-rectangle))
 
 (provide 'center-rectangle)
+
+;; Custom global key bindings
+
+;; Center text in selected rectangle ("hello    " => "  hello  ").
+;; Mainly added for helping me writing centered text while playing with artist mode.
 (global-set-key (kbd "C-c C-r") 'center-rectangle)
+
+;; Toggle text overwrite mode, for the same reason as above lol.
+(global-set-key [C-help] 'overwrite-mode)
+
+;; Fast close all opened buffers, for that situations that you have a thousand
+;; opened buffers and you need to reboot your mind.
+(global-set-key (kbd "C-x C-k") 'clean-buffers)
+
+;; Remove the current line without copying it to the copy buffer.
+(global-set-key (kbd "M-k") 'delete-current-line)
+
+;; Shortcut to artist mode.
+(global-set-key (kbd "C-c C-a") 'artist-mode)
