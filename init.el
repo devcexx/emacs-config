@@ -210,3 +210,19 @@
 (global-set-key (kbd "M-k") 'delete-current-line)
 
 (provide 'delete-current-line)
+
+(defun center-rectangle (beg end)
+  (interactive "*r")
+  (kill-rectangle beg end)
+  (with-temp-buffer
+    (yank-rectangle)
+    (setq fill-column (current-column))
+    (center-region (point-min) (point-max))
+    (goto-char (point-max))
+    (move-to-column fill-column t)
+    (kill-rectangle (point-min) (point)))
+  (goto-char beg)
+  (yank-rectangle))
+
+(provide 'center-rectangle)
+(global-set-key (kbd "C-c C-r") 'center-rectangle)
