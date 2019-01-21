@@ -1,4 +1,5 @@
 *
 !init.el
+!buffer-move.el
 !.gitignore
 !.gitattributes
