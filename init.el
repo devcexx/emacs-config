@@ -43,7 +43,9 @@
 '(display-time-mode t))
 
 (use-package smart-mode-line
-  :ensure t)
+  :ensure t
+  :config
+  )
 
 (use-package smart-mode-line-powerline-theme
   :ensure t
@@ -66,6 +68,18 @@
 
   (sml/setup)
   (sml/apply-theme 'powerline))
+
+(setq neo-window-width 35)
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+(setq neo-smart-open t)
+
+(use-package all-the-icons
+  :ensure t)
+
+(use-package neotree
+  :after (all-the-icons)
+  :ensure t
+  :bind ([f8] . neotree-toggle))
 
 ;; WindMove: move between buffers using shift+arrows
 (when (fboundp 'windmove-default-keybindings)
