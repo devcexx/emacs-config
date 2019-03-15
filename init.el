@@ -153,6 +153,10 @@
   ("C-c C-SPC" . company-complete))
 (add-hook 'after-init-hook 'global-company-mode)
 
+(use-package company-terraform
+  :ensure t
+  :init (company-terraform-init))
+
 ;; Magit: Git client
 (use-package magit
   :ensure t
