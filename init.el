@@ -266,7 +266,3 @@
 
 ;; Shortcut to artist mode.
 (global-set-key (kbd "C-c C-a") 'artist-mode)
-
-(let ((ciao-emacs-path "/usr/local/ciao/1.18.0/ciao_emacs/elisp/ciao-site-file.el"))
-  (if (file-exists-p ciao-emacs-path)
-      (load-file ciao-emacs-path)))
