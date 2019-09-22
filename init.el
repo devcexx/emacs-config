@@ -12,7 +12,6 @@
 ;; Enable desktop save mode
 (desktop-save-mode 1)
 
-
 ;; Move temporal files to Emacs folder
 (setq backup-directory-alist
       `((".*" . ,"~/.emacs.d/temp")))
@@ -21,53 +20,85 @@
 
 ;; Init repositories
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+			 ("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
 
+;; First install use-package
 (unless package-archive-contents
   (package-refresh-contents))
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
-;; Theme loading
-(use-package darkokai-theme
+;; Theme
+(use-package doom-themes
   :ensure t
-  :config (load-theme 'darkokai t))
+  :config (load-theme 'doom-Iosvkem t))
 
-;; Configure status bar
+;; Modeline
+(use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode))
+
+(use-package nyan-mode
+  :ensure t
+  :after doom-modeline
+  :config
+  (nyan-mode)
+  (nyan-start-animation))
+
+(use-package fancy-battery
+  :ensure t
+  :after doom-modeline)
+
 (custom-set-variables
-'(display-time-24hr-format t)
+'(display-time-24hr-format nil)
 '(display-time-default-load-average nil)
 '(display-time-mode t))
 
-(use-package smart-mode-line
+;; Kawaii rainbow delimiters
+(use-package rainbow-delimiters
+  :ensure t
+  :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+
+;; Scrolling tweaking
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+(setq mouse-wheel-progressive-speed t)
+(setq scroll-step 2)
+
+;; Tabs!
+(use-package centaur-tabs
+  :ensure t
+  :demand
+  :after projectile
+  :config
+  (centaur-tabs-headline-match)
+  (setq centaur-tabs-set-bar 'over)
+  (setq centaur-tabs-set-icons t)
+  (setq centaur-tabs-height 32)
+  (centaur-tabs-mode t)
+  (centaur-tabs-group-by-projectile-project)
+  :bind
+  ("C-," . centaur-tabs-backward)
+  ("C-." . centaur-tabs-forward)
+  ("C->" . centaur-tabs-switch-group))
+
+;; Cursor highlight
+;; Only enabled when Emacs is running on a graphical interface
+(use-package beacon
   :ensure t
   :config
+  (setq beacon-color "#fc20bb")
   )
 
-(use-package smart-mode-line-powerline-theme
-  :ensure t
-  :after smart-mode-line
-  :config
-  (setq sml/no-confirm-load-theme t)
-  (setq sml/name-width 15)
-  (setq powerline-height 20)
-  
-  (set-face-attribute 'powerline-active1 nil :foreground "#FFFFFF" :background "DarkOrange")
-  (set-face-attribute 'powerline-active2 nil :foreground "#FFFFFF" :background "#000000")
+;; Disable beacon if we're on a tty
+;; Dunno why but it must to be done on window-setup-hook, otherwise it does
+;; not have any effect
+(add-hook 'window-setup-hook (lambda () (if window-system (beacon-mode 1) (beacon-mode -1))))
 
-  (custom-set-faces
-   '(sml/filename ((t (:inherit sml/global :background "DarkOrange" :foreground "Black"))))
-   '(sml/modes ((t (:inherit sml/global :background "#000000" :foreground "White"))))
-   '(sml/position-percentage ((t (:inherit sml/prefix :background "#000000" :foreground "White" :weight normal))))
-   '(sml/prefix ((t (:inherit sml/global :background "DarkOrange" :foreground "Black"))))
-   '(sml/vc ((t (:inherit sml/git :background "#000000" :foreground "#aa0000"))))
-   '(sml/vc-edited ((t (:inherit sml/prefix :background "#000000" :foreground "White")))))
-
-  (sml/setup)
-  (sml/apply-theme 'powerline))
+(use-package browse-kill-ring
+  :ensure t)
 
 (setq neo-window-width 35)
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
@@ -93,11 +124,62 @@
 (global-set-key (kbd "<C-S-right>")  'buf-move-right)
 
 ;; Disable bars and unnecesary menus
-(when window-system
-  (tooltip-mode -1)
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1))
+(tooltip-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; Prettify symbols mode
+;; Global symbols
+(add-hook 'prog-mode-hook
+	  (lambda ()
+	    (setq prettify-symbols-alist
+		  '(
+		    ("=>"  . ?⇒)
+		    ("->"  . ?→)
+		    ("!=" . ?≠)
+		    ("<=" . ?≤)
+		    (">=" . ?≥)
+		    ))
+	    (prettify-symbols-mode)))
+
+;; Mode-specific symbols
+(add-hook 'emacs-lisp-mode-hook
+	  (lambda ()
+	    (setq prettify-symbols-alist
+		  (append
+		   prettify-symbols-alist
+		   '(
+		     ("lambda" . ?λ)
+		     )))
+	    (prettify-symbols-mode)
+	    ))
+
+(add-hook 'python-mode-hook
+	  (lambda ()
+	    (setq prettify-symbols-alist
+		  (append
+		   prettify-symbols-alist
+		   '(
+		     ("lambda" . ?λ)
+		     )))
+	    (prettify-symbols-mode)
+	    ))
+
+;; Elcord: support for Discord. The elcord folder contains a git
+;; submodule that points to a custom elcord mode without reconnect
+;; messages repeating each 15 seconds.
+(add-to-list 'load-path "~/.emacs.d/elcord/")
+(require 'elcord)
+(setq elcord-silent-mode 1)
+(elcord-mode)
+
+;; Undo tree
+(unless (package-installed-p 'undo-tree)
+  (package-install 'undo-tree))
+
+(require 'undo-tree)
+(global-undo-tree-mode)
 
 ;; General packages
 
@@ -157,6 +239,12 @@
   :ensure t
   :init (company-terraform-init))
 
+(use-package company-jedi
+  :ensure t
+  :init
+  (add-to-list 'company-backends 'company-jedi)
+  (setq jedi:tooltip-method '('popup)))
+
 ;; Magit: Git client
 (use-package magit
   :ensure t
@@ -203,11 +291,8 @@
 (add-hook 'rust-mode-hook #'racer-mode)
 (add-hook 'racer-mode-hook #'eldoc-mode)
 
-(unless (package-installed-p 'elcord)
-  (package-install 'elcord))
-
-(require 'elcord)
-(elcord-mode)
+(use-package php-mode
+  :ensure t)
 
 (defun kill-buffers()
   (let (buffer buffers)

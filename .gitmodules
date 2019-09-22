@@ -1,0 +1,6 @@
+[submodule "beacon"]
+	path = beacon
+	url = https://github.com/Malabarba/beacon
+[submodule "elcord"]
+	path = elcord
+	url = https://github.com/devcexx/elcord

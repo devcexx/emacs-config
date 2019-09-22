@@ -3,3 +3,5 @@
 !buffer-move.el
 !.gitignore
 !.gitattributes
+!.gitmodules
+!elcord/
