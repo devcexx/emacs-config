@@ -270,8 +270,18 @@
 ;; js2-mode: Javascript integration
 (use-package js2-mode
   :ensure t
+  :config
+  (define-key js2-mode-map (kbd "M-.") nil) ;; Allow company-tern to override this keymap
   :bind (("C-x n" . js2-next-error)))
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-jsx-mode))
+
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+(use-package company-tern
+  :ensure t
+  :after company)
+
+(add-to-list 'company-backends 'company-tern)
+(add-hook 'js2-mode-hook (lambda () (tern-mode)))
 
 ;; rust-mode: Rust integration
 (use-package rust-mode
@@ -290,9 +300,6 @@
   :bind (("C-?" . racer-describe)))
 (add-hook 'rust-mode-hook #'racer-mode)
 (add-hook 'racer-mode-hook #'eldoc-mode)
-
-(use-package php-mode
-  :ensure t)
 
 (defun kill-buffers()
   (let (buffer buffers)
