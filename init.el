@@ -287,7 +287,12 @@
 (use-package rust-mode
   :ensure t)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-(setq flycheck-rust-cargo-executable "~/.cargo/bin/cargo")
+
+(use-package flycheck-rust
+  :ensure t)
+
+(with-eval-after-load 'rust-mode
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;; racer: Rust completion through Racer
 ;; (requires installing Rust source code and racer):
