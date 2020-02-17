@@ -70,18 +70,8 @@
 (setq mouse-wheel-progressive-speed t)
 (setq scroll-step 2)
 
-; Tabs! (but now working correctly)
-(use-package awesome-tab
-  :load-path "awesome-tab"
-  :defer 0.1
-  :config
-  (awesome-tab-mode t)
-  :bind
-   ("C-," . awesome-tab-backward-tab)
-   ("C-." . awesome-tab-forward-tab)
-   ("C->" . awesome-tab-forward-group)
-   ("C-<" . awesome-tab-backward-group)
-)
+; Fuck off tabs. Still having issues with doom-modeline
+; Let's just wait until Emacs 27.1 is released.
 
 ;; Cursor highlight
 ;; Only enabled when Emacs is running on a graphical interface
