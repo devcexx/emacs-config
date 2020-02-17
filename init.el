@@ -67,22 +67,18 @@
 (setq mouse-wheel-progressive-speed t)
 (setq scroll-step 2)
 
-;; Tabs!
-(use-package centaur-tabs
-  :ensure t
-  :demand
-  :after projectile
+; Tabs! (but now working correctly)
+(use-package awesome-tab
+  :load-path "awesome-tab"
+  :defer 0.1
   :config
-  (centaur-tabs-headline-match)
-  (setq centaur-tabs-set-bar 'over)
-  (setq centaur-tabs-set-icons t)
-  (setq centaur-tabs-height 32)
-  (centaur-tabs-mode t)
-  (centaur-tabs-group-by-projectile-project)
+  (awesome-tab-mode t)
   :bind
-  ("C-," . centaur-tabs-backward)
-  ("C-." . centaur-tabs-forward)
-  ("C->" . centaur-tabs-switch-group))
+   ("C-," . awesome-tab-backward-tab)
+   ("C-." . awesome-tab-forward-tab)
+   ("C->" . awesome-tab-forward-group)
+   ("C-<" . awesome-tab-backward-group)
+)
 
 ;; Cursor highlight
 ;; Only enabled when Emacs is running on a graphical interface
@@ -363,3 +359,4 @@
 
 ;; Shortcut to artist mode.
 (global-set-key (kbd "C-c C-a") 'artist-mode)
+
