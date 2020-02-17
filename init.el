@@ -2,11 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
+(defun conf-rel-path (path)
+  (concat user-emacs-directory path))
+
 ;; Disable right option modifier key on macOS
 (cond ((string-equal system-type "darwin")
        (setq mac-right-option-modifier nil)))
 
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file (conf-rel-path "custom.el"))
 (load custom-file 'noerror)
 
 ;; Enable desktop save mode
@@ -14,9 +17,9 @@
 
 ;; Move temporal files to Emacs folder
 (setq backup-directory-alist
-      `((".*" . ,"~/.emacs.d/temp")))
+      `((".*" . , (conf-rel-path "temp"))))
 (setq auto-save-file-name-transforms
-      `((".*" ,"~/.emacs.d/temp" t)))
+      `((".*" , (conf-rel-path "temp") t)))
 
 ;; Init repositories
 (require 'package)
@@ -112,7 +115,7 @@
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
 
-(load-file "~/.emacs.d/buffer-move.el")
+(load-file (conf-rel-path "buffer-move/buffer-move.el"))
 
 (global-set-key (kbd "<C-S-up>")     'buf-move-up)
 (global-set-key (kbd "<C-S-down>")   'buf-move-down)
@@ -165,7 +168,7 @@
 ;; Elcord: support for Discord. The elcord folder contains a git
 ;; submodule that points to a custom elcord mode without reconnect
 ;; messages repeating each 15 seconds.
-(add-to-list 'load-path "~/.emacs.d/elcord/")
+(add-to-list 'load-path (conf-rel-path "elcord/"))
 (require 'elcord)
 (setq elcord-silent-mode 1)
 (elcord-mode)

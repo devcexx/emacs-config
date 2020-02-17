@@ -1,7 +1,9 @@
 *
 !init.el
-!buffer-move.el
 !.gitignore
 !.gitattributes
 !.gitmodules
 !elcord/
+!buffer-move
+!awesome-tab
+!beacon

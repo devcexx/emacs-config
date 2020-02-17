@@ -1,6 +1,9 @@
-[submodule "beacon"]
-	path = beacon
-	url = https://github.com/Malabarba/beacon
 [submodule "elcord"]
 	path = elcord
 	url = https://github.com/devcexx/elcord
+[submodule "buffer-move"]
+	path = buffer-move
+	url = https://github.com/lukhas/buffer-move
+[submodule "awesome-tab"]
+	path = awesome-tab
+	url = https://github.com/manateelazycat/awesome-tab
