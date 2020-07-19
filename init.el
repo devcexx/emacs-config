@@ -70,6 +70,16 @@
 (setq mouse-wheel-progressive-speed t)
 (setq scroll-step 2)
 
+;; Fill column indicator
+(use-package fill-column-indicator
+  :ensure t
+  :config
+  (setq fci-rule-width 2)
+  (setq fci-rule-color "darkred")
+  (setq fci-rule-use-dashes nil)
+  (setq fci-rule-column 120)
+  :hook (prog-mode . fci-mode))
+
 ; Fuck off tabs. Still having issues with doom-modeline
 ; Let's just wait until Emacs 27.1 is released.
 
