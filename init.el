@@ -187,6 +187,24 @@
   :ensure t
   :init (global-flycheck-mode))
 
+;; LSP Mode
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :config (require 'lsp-clients))
+
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-sideline-show-diagnostics t)
+  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-show-code-actions t)
+  (setq lsp-ui-sideline-update-mode "point")
+  (setq lsp-ui-sideline-delay 0.2)
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
+
 ;; exec-path-from-shell: Set the Emacs path value
 ;; to the value of the user shell PATH variable value.
 (use-package exec-path-from-shell
@@ -276,28 +294,18 @@
 
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
-;; rust-mode: Rust integration
+;; Rust integration
+(use-package toml-mode
+  :ensure t)
+
 (use-package rust-mode
-  :ensure t)
-(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-
-(use-package flycheck-rust
-  :ensure t)
-
-(with-eval-after-load 'rust-mode
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
-;; racer: Rust completion through Racer
-;; (requires installing Rust source code and racer):
-;; $ rustup component add rust-src
-;; $ cargo install racer
-;; May be required to set the RUST_SRC_PATH variable environment to
-;; the path where it's located the Rust source code on the system
-(use-package racer
   :ensure t
-  :bind (("C-?" . racer-describe)))
-(add-hook 'rust-mode-hook #'racer-mode)
-(add-hook 'racer-mode-hook #'eldoc-mode)
+  :hook (rust-mode . lsp))
+(add-to-list 'auto-mode-alist '("\\.rs$" . rust-mode))
+
+(use-package cargo
+  :ensure t
+  :hook (rust-mode . cargo-minor-mode))
 
 (defun kill-buffers()
   (let (buffer buffers)
