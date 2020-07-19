@@ -228,6 +228,7 @@
   :ensure t
   :config
   (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
   
   :bind
   ("C-c SPC" . company-complete)
