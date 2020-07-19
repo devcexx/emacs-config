@@ -77,8 +77,7 @@
   (setq fci-rule-width 2)
   (setq fci-rule-color "darkred")
   (setq fci-rule-use-dashes nil)
-  (setq fci-rule-column 120)
-  :hook (prog-mode . fci-mode))
+  (setq fci-rule-column 120)) ;; Keep disabled fci by default (gives problems with Company)
 
 ; Fuck off tabs. Still having issues with doom-modeline
 ; Let's just wait until Emacs 27.1 is released.
@@ -191,7 +190,9 @@
 (use-package lsp-mode
   :ensure t
   :commands lsp
-  :config (require 'lsp-clients))
+  :config (require 'lsp-clients)
+  (setq lsp-lens-auto-enable t)
+  (setq lsp-headerline-breadcrumb-enable t))
 
 (use-package lsp-ui
   :ensure t
