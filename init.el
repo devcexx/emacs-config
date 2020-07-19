@@ -98,17 +98,13 @@
 (use-package browse-kill-ring
   :ensure t)
 
-(setq neo-window-width 35)
-(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-(setq neo-smart-open t)
-
-(use-package all-the-icons
-  :ensure t)
-
-(use-package neotree
-  :after (all-the-icons)
+(use-package treemacs
   :ensure t
-  :bind ([f8] . neotree-toggle))
+  :bind ([f8] . treemacs))
+
+(use-package treemacs-projectile
+  :ensure t
+  :after treemacs projectile)
 
 ;; WindMove: move between buffers using shift+arrows
 (when (fboundp 'windmove-default-keybindings)
