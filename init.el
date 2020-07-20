@@ -180,7 +180,16 @@
 ;; Flycheck: syntax check on the fly
 (use-package flycheck
   :ensure t
-  :init (global-flycheck-mode))
+  :init (global-flycheck-mode)
+  :config
+
+  (add-to-list 'display-buffer-alist
+	       `(,(rx bos "*Flycheck errors*" eos)
+		 (display-buffer-reuse-window
+		  display-buffer-in-side-window)
+		 (side            . bottom)
+		 (reusable-frames . visible)
+		 (window-height   . 0.20))))
 
 ;; LSP Mode
 (use-package lsp-mode
