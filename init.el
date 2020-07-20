@@ -206,6 +206,11 @@
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
 
+;; Used by lsp-mode for applying code suggestions
+(use-package yasnippet
+  :ensure t
+  :config (yas-global-mode 1))
+
 ;; exec-path-from-shell: Set the Emacs path value
 ;; to the value of the user shell PATH variable value.
 (use-package exec-path-from-shell
