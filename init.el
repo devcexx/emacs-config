@@ -186,9 +186,13 @@
 (use-package lsp-mode
   :ensure t
   :commands lsp
+  :hook
+  (lsp-mode . lsp-signature-activate)
   :config (require 'lsp-clients)
   (setq lsp-lens-auto-enable t)
-  (setq lsp-headerline-breadcrumb-enable t))
+  (setq lsp-headerline-breadcrumb-enable t)
+  (setq lsp-signature-auto-activate t)
+  (setq lsp-signature-render-documentation nil))
 
 (use-package lsp-ui
   :ensure t
