@@ -375,6 +375,22 @@
 
 (provide 'center-rectangle)
 
+;; Special keybindings
+;; org-mode is not an excuse to make WindMove and BufferMove bindings for stop working
+;; I'll find some replacements when I need it.
+(add-hook 'org-mode-hook
+	  (lambda ()
+	    (define-key org-mode-map (kbd "<S-left>") nil)
+	    (define-key org-mode-map (kbd "<S-right>") nil)
+	    (define-key org-mode-map (kbd "<S-up>") nil)
+	    (define-key org-mode-map (kbd "<S-down>") nil)
+
+	    (define-key org-mode-map (kbd "<C-S-left>") nil)
+	    (define-key org-mode-map (kbd "<C-S-right>") nil)
+	    (define-key org-mode-map (kbd "<C-S-up>") nil)
+	    (define-key org-mode-map (kbd "<C-S-down>") nil)))
+
+
 ;; Custom global key bindings
 
 ;; Center text in selected rectangle ("hello    " => "  hello  ").
