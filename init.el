@@ -2,6 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Basic configurations ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun conf-rel-path (path)
   (concat user-emacs-directory path))
 
@@ -34,7 +38,10 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
-;; Theme
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Themes, decorators and visuals ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (use-package doom-themes
   :ensure t
   :config (load-theme 'doom-Iosvkem t))
@@ -44,7 +51,7 @@
   :ensure t
   :hook (after-init . doom-modeline-mode))
 
-(use-package nyan-mode
+(use-package nyan-mode ;; Essential
   :ensure t
   :after doom-modeline
   :config
@@ -80,7 +87,7 @@
   (setq fci-rule-column 120)) ;; Keep disabled fci by default (gives problems with Company)
 
 ; Fuck off tabs. Still having issues with doom-modeline
-; Let's just wait until Emacs 27.1 is released.
+; Let's just wait until Emacs 27 is released.
 
 ;; Cursor highlight
 ;; Only enabled when Emacs is running on a graphical interface
@@ -160,6 +167,10 @@
 	    (prettify-symbols-mode)
 	    ))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; General puropose packages ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Elcord: support for Discord. The elcord folder contains a git
 ;; submodule that points to a custom elcord mode without reconnect
 ;; messages repeating each 15 seconds.
@@ -174,8 +185,6 @@
 
 (require 'undo-tree)
 (global-undo-tree-mode)
-
-;; General packages
 
 ;; Flycheck: syntax check on the fly
 (use-package flycheck
@@ -289,7 +298,9 @@
   :bind (("C-x v" . magit-status)
          ("C-x M-v" . magit-dispatch-popup)))
 
-;; Language-specific packages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Language-specific packages ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Markdown-mode
 (use-package markdown-mode
@@ -375,7 +386,10 @@
 
 (provide 'center-rectangle)
 
-;; Special keybindings
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Special keybindings ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; org-mode is not an excuse to make WindMove and BufferMove bindings for stop working
 ;; I'll find some replacements when I need it.
 (add-hook 'org-mode-hook
@@ -391,7 +405,9 @@
 	    (define-key org-mode-map (kbd "<C-S-down>") nil)))
 
 
-;; Custom global key bindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Custom global key bindings ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Center text in selected rectangle ("hello    " => "  hello  ").
 ;; Mainly added for helping me writing centered text while playing with artist mode.
