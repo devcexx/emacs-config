@@ -300,6 +300,15 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
+;; toc-org for generating Table Of Contents automatically in org.
+(use-package toc-org
+  :ensure t
+  :hook
+  (org-mode . toc-org-mode)
+
+  :bind
+  ("C-c C-o" . toc-org-markdown-follow-thing-at-point))
+
 ;; autex: LaTeX integration
 (use-package auctex
   :defer t
