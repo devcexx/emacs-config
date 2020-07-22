@@ -62,11 +62,6 @@
   :ensure t
   :after doom-modeline)
 
-(custom-set-variables
-'(display-time-24hr-format nil)
-'(display-time-default-load-average nil)
-'(display-time-mode t))
-
 ;; Kawaii rainbow delimiters
 (use-package rainbow-delimiters
   :ensure t
