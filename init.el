@@ -177,12 +177,10 @@
 (setq elcord-silent-mode 1)
 (elcord-mode)
 
-;; Undo tree
-(unless (package-installed-p 'undo-tree)
-  (package-install 'undo-tree))
 
-(require 'undo-tree)
-(global-undo-tree-mode)
+(use-package undo-tree
+  :ensure t
+  :config (global-undo-tree-mode))
 
 ;; Flycheck: syntax check on the fly
 (use-package flycheck
