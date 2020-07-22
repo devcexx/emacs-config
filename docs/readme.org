@@ -8,11 +8,36 @@ cloning the repository and let the =init.el= do its work. No extra
 configuration or package download is required to make it work (or, at
 least, that's the objective).
 
-** Table of Contents :TOC_2_gh:
+* Table of Contents                                                :TOC_2_gh:
 - [[#about][About]]
 - [[#installing][Installing]]
   - [[#are-you-on-windows][Are you on Windows?]]
+- [[#included-stuff][Included stuff]]
   - [[#macos-support][macOS support]]
+  - [[#desktop-saving][Desktop saving]]
+  - [[#custom-variables-file][Custom variables file]]
+  - [[#temporary-files-management][Temporary files management]]
+  - [[#theme][Theme]]
+  - [[#menus][Menus]]
+  - [[#modeline][Modeline]]
+  - [[#rainbow-delimiters][rainbow-delimiters]]
+  - [[#scroll-tweaking][Scroll Tweaking]]
+  - [[#fill-column-indicator][fill-column-indicator]]
+  - [[#tabs][Tabs]]
+  - [[#beacon][beacon]]
+  - [[#browse-kill-ring][browse-kill-ring]]
+  - [[#treemacs][Treemacs]]
+  - [[#treemacs-projectile][treemacs-projectile]]
+  - [[#windmove][WindMove]]
+  - [[#buffer-move][buffer-move]]
+  - [[#prettify-symbols-mode][prettify-symbols-mode]]
+  - [[#global-linum-mode][global-linum-mode]]
+  - [[#elcord][elcord]]
+  - [[#undo-tree][undo-tree]]
+  - [[#flycheck][flycheck]]
+  - [[#lsp-mode][lsp-mode]]
+  - [[#lsp-ui][lsp-ui]]
+  - [[#yasnippet][yasnippet]]
 
 * Installing
 
@@ -24,7 +49,9 @@ empty:
 
 ** Are you on Windows?
 
-Well, that's your problem dude.
+Well, that's your problem.
+
+* Included stuff
 
 ** macOS support
 
@@ -32,3 +59,366 @@ I'm not a common user of macOS, but I did. This means that I'm not
 testing whether the new updates works on macOS or not. Nevertheless,
 there's a line on the [../init.el#L13](init.el) file so the macOS users
 can use the left alt key as the meta key on Emacs.
+
+** Desktop saving
+
+Automatic desktop save mode is enabled:
+
+#+BEGIN_SRC elisp
+;; Enable desktop save mode
+(desktop-save-mode 1)
+#+END_SRC
+
+** Custom variables file
+
+To preventing make your =init.el= look weird, all the custom set
+variables you might have are stored inside a =custom.el= file inside
+your =.emacs.d= folder:
+
+#+BEGIN_SRC elisp
+(setq custom-file (conf-rel-path "custom.el"))
+(load custom-file 'noerror)
+#+END_SRC
+
+** Temporary files management
+
+To preventing trashing all your work folders with files with really
+weird names while working with Emacs, the config file sets all backup
+files or auto save files to be saved into a =temp= folder into your
+=.emacs.d= folder:
+
+#+BEGIN_SRC elisp
+;; Move temporal files to Emacs folder
+(setq backup-directory-alist
+      `((".*" . , (conf-rel-path "temp"))))
+(setq auto-save-file-name-transforms
+      `((".*" , (conf-rel-path "temp") t)))
+#+END_SRC
+
+** Theme
+
+The default selected theme is the /doom-Iosvkem/ theme, from the
+[[https://github.com/hlissner/emacs-doom-themes][doom-themes]] package. If you don't like it, don't worry, that package
+contains tons of themes. Very likely that you'll find one that you'd
+like :).
+
+** Menus
+
+This configuration file disables all the GUI menus, tooltips, scroll
+bars, etc. They're not cool:
+
+#+BEGIN_SRC elisp
+;; Disable bars and unnecesary menus
+(tooltip-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+#+END_SRC
+
+** Modeline
+
+This file uses [[https://github.com/seagle0128/doom-modeline][doom-modeline]] as modeline. The modeline settings are
+set to de defaults, but a few packages more has been included to make
+it a bit fancier:
+
+*** nyan-mode
+
+Essential package in every Emacs installation that adds a Nyan Cat to
+your modeline, that indicates the scroll position on the file that
+you're editing. The animation is enabled on the =init.el= file by
+issuing the command =nyan-start-animation=. If you don't like it, just
+remove that line from the configuration file or run the command
+=nyan-stop-animation=. It includes the Nyan Cat music that can be
+played with the =nyan-start-music=.
+
+*** fancy-battery
+
+Just add your remaining battery to the modeline in case that you're
+working on a laptop.
+
+** rainbow-delimiters
+
+A mode that sets the parenthesis, brackets, curly brackets ..., with
+different colors, so you can visually identify each pair of
+delimiters. It is enabled by default only on the programming modes:
+
+: (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
+** Scroll Tweaking
+
+In the config file some variables are set to try to make the scrolling
+of Emacs a bit more natural. Feel free to play with its values until
+you find your sweet spot:
+
+#+BEGIN_SRC elisp
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+(setq mouse-wheel-progressive-speed t)
+(setq scroll-step 2)
+#+END_SRC
+
+Take a look to the documentation of each one =C-h v <var name> RET= to
+see a detailed description of each one.
+
+** fill-column-indicator
+
+Is a mode that shows a veritical line in a buffer to tell you when you
+are making your lines of code too long. By default, I've set this
+mode *disabled* by default, since it have compatibility issues with
+Company and gives weird problems when the buffer that is showing it is
+quite narrow and the bar shouldn't even appear. You might enable it on
+each buffer you want by doing =M-x fci-mode RET=. You might also
+enable it on, for example all the buffers with prog-mode by modifying
+the init.el file:
+
+#+BEGIN_SRC elisp
+(use-package fill-column-indicator
+  ....
+  :hook (add-hook prog-mode . fci-mode)
+#+END_SRC
+
+** Tabs
+
+Tabs are something that I'd like to have en Emacs. Unfortunately, I've
+have a lot of issues with some well-known tab packages (like [[https://github.com/ema2159/centaur-tabs][Centaur]]),
+that gives a lot of problems with =doom-modeline=. Basically what I've
+seen is that when you have visible more than one buffer with the same
+prog mode enabled (for example, you're editing two different Rust
+files), everytime you type something, the modeline starts blinking,
+like if you were switchting constantly from one buffer to
+another. It's really weird. I've decided to wait until Emacs 27, that
+will integrate a tabs mode, and will see if everything works.
+
+** beacon
+
+Beacon is a simple package that everytime you scroll a buffer, it
+draws a trail in the position of the cursor, so you always know where
+it is. I really hate to scroll the buffer, loose the cursor for a
+moment, and then don't know where it is. With this package, that won't
+happen to me anymore :).
+
+** browse-kill-ring
+
+This is a package that allows you see what's in your kill
+ring. Actually, I didn't even remember when I added this package to
+the file. I don't even added any keybinding because I don't even use
+it. Anyway, you can see what's in your kill-ring with 
+=M-x browse-kill-ring RET=.
+
+** Treemacs
+
+Treemacs is a package that allows you to have a side panel where you
+can browse the different files of a project. It is not intended for
+browsing your whole filesystem, like [[does][Neotree]], but to have different
+pre-added projects on it, and then browse them. For opening it, just
+press =f8=. You may find all of the configuration variables you can
+change by reading the [[https://github.com/Alexander-Miller/treemacs#installation][readme]] of its repo (they are a lot).
+
+When you've open the Treemacs sidebar, you may type =?= for opening a
+quick guide of the common keybindings it has. Pretty useful.
+
+** treemacs-projectile
+
+This is an extension of Treemacs that allows you to easily add
+Projectile projects to the treemacs sidebar. Just type =C-c C-p p= on
+Treemacs and write the path of your Projectile project.
+
+** WindMove
+
+[[https://www.emacswiki.org/emacs/WindMove][WindMove]] is a library built into Emacs that allows you to easily move
+through the buffers you have opened. You have only to type
+=S-<arrow>=, to change to another buffer in that direction. If you
+don't like use shift to do this, you can change it as described [[https://www.emacswiki.org/emacs/WindMove][here]].
+
+** buffer-move
+
+buffer-move is a little script that allows you to easily swap the
+position of two buffers with intuitive keybindings. For example, if
+you have your Emacs splitted into two vertical buffers, and you're
+typing on the one in the left, you can type =C-S-right= to exchange
+the position of both buffers. And the same applies to the rest of
+arrow keys. These keybindings are globally defined in the =init.el=
+file, and you may change it if you want:
+
+#+BEGIN_SRC elisp
+(global-set-key (kbd "<C-S-up>")     'buf-move-up)
+(global-set-key (kbd "<C-S-down>")   'buf-move-down)
+(global-set-key (kbd "<C-S-left>")   'buf-move-left)
+(global-set-key (kbd "<C-S-right>")  'buf-move-right)
+#+END_SRC
+
+** prettify-symbols-mode
+
+This is a built-in mode into Emacs that allows you to, well, prettify
+some common symbols while programming or whatever.
+
+Currently, the configuration file defines a few symbols that are
+common for all programming languages (by hooking =prog-mode=), and a
+few ones that only applies to a specific languages.
+
+The common symbols are =\=>=; =->=; =!\==; =<\==; =>\== and are
+defined as follows:
+
+#+BEGIN_SRC elisp
+(add-hook 'prog-mode-hook
+	  (lambda ()
+	    (setq prettify-symbols-alist
+		  '(
+		    ("=>"  . ?⇒)
+		    ("->"  . ?→)
+		    ("!=" . ?≠)
+		    ("<=" . ?≤)
+		    (">=" . ?≥)
+		    ))
+	    (prettify-symbols-mode)))
+#+END_SRC
+
+Then, for Elisp and Python, also the =lambda= keyword is changed into
+an actual λ symbol. This is done, for Python for example, like this:
+
+#+BEGIN_SRC elisp
+(add-hook 'python-mode-hook
+	  (lambda ()
+	    (setq prettify-symbols-alist
+		  (append
+		   prettify-symbols-alist
+		   '(
+		     ("lambda" . ?λ)
+		     )))
+	    (prettify-symbols-mode)
+	    ))
+#+END_SRC
+
+There are just a few symbols configured because I'm quite reluctant to
+overload a source file with a huge amount of these symbols. But
+looking to the configuration of the ones that they're already added,
+you may add whatever symbols you like to whatever languages.
+
+** global-linum-mode
+
+This is a built-in global mode in Emacs that, when active, shows the
+line numbers on all opened buffers. If you don't like this, you'll
+have just to remove the =(global-linum-mode)= line from the =init.el=.
+
+You may also enable it only for source files by removing the mentioned
+line, and adding the following code:
+
+#+BEGIN_SRC elisp
+(add-hook 'prog-mode-hook (lambda () (linum-mode)))
+#+END_SRC
+
+The =(linum-mode)= only enables showing file lines on one specific
+buffer.
+
+** elcord
+
+[[https://github.com/Mstrodl/elcord][Elcord]] is a package that enables Emacs to send Rich Presence
+information to your running Discord instance, to show all your friends
+what kind of hacky things you are doing at any moment.
+
+Currently, the original [[https://github.com/Mstrodl/elcord][Elcord]] package has something that drive me
+nuts: When you don't have Discord opened, Elcord keeps trying to
+connect to it each 15 seconds, which is something reasonable. But, the
+problem here is that everytime Elcord fails to connect because Discord
+is not opened, *it tells it to you as a message in the
+minibuffer*. Just to make it clear: *Every 15 seconds*. And after a few minutes, interrupting
+you whenever you're trying to type a command, or just by showing the
+same message again and again, you realize that is a pain in the ass.
+
+To solve this, this repo includes a submodule to a [[https://github.com/devcexx/elcord][modified version of
+Elcord]] by me (just a few lines of code, don't get me wrong), that
+allows you to silent this messages by just setting a variable.
+
+#+BEGIN_SRC elisp
+;; Elcord: support for Discord. The elcord folder contains a git
+;; submodule that points to a custom elcord mode without reconnect
+;; messages repeating each 15 seconds.
+(add-to-list 'load-path (conf-rel-path "elcord/"))
+(require 'elcord)
+(setq elcord-silent-mode 1)
+(elcord-mode)
+#+END_SRC
+
+** undo-tree
+
+[[http://www.dr-qubit.org/undo-tree/undo-tree.el][Undo-tree]] is a package that allows you to visualize the changes tree
+of a specific buffer and move through them. Also, it changes the
+default undo and redo keybindings (=C-/= and =C-?=), and makes them
+work *normal* as in any other text editor. I've never understood why
+Emacs undo is that weird out of the box. Anyway, you can open the undo
+tree visualizer with (=C-x u=) or =M-x undo-tree-visualize RET=. It is
+quite useful for reverting a file to a specific point after have made
+a lot of changes and going back and forth, undoing and redoing a lot
+of times.
+
+** flycheck
+
+[[https://www.flycheck.org/][Flycheck]] is a package that can connect with different programming
+language backends and highlight errors and warnings inside the buffer
+where you're on,
+in the exact point where they're generated. It should work out of the
+box with common languages and tools.
+
+One of the lots of features it has, is that you can see into a buffer
+all the errors you have in a selected buffer. The configuration of
+this has been tweaked a bit to ensure that everytime this buffer opens
+(with =M-x flycheck-list-errors RET= or =C-c ! l=), it is placed
+horizontally at the bottom of Emacs, with a size of a 20% of the
+height of the whole Emacs screen. This is done by this snippet of
+code:
+
+#+BEGIN_SRC elisp
+(add-to-list 'display-buffer-alist
+	       `(,(rx bos "*Flycheck errors*" eos)
+		 (display-buffer-reuse-window
+		  display-buffer-in-side-window)
+		 (side            . bottom)
+		 (reusable-frames . visible)
+		 (window-height   . 0.20)))
+#+END_SRC
+
+You can revert to the default behaviour by just removing that code
+paragraph from the =init.el=.
+
+** lsp-mode
+
+[[https://microsoft.github.io/language-server-protocol/][LSP]] is an acronym for "Language Server Protocol". It is a protocol
+developed by Microsoft and implemented by its editor VSCode, that
+standarizes a way of communication between any code editor and a
+language server, that is able to analyze a specific project of a
+specific language, report warns and errors in realtime, etc. The
+reason that this is really cool is that, it is only required to
+develop one language server to give full support to /any/ text
+editor.
+
+So, what [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]] does is to implement the client side functionality,
+so your Emacs can connect to this different language servers and give
+your editor full support for your favourite language.]
+
+For example, let's take a look to [[https://rust-analyzer.github.io/][Rust Analyzer]]. Rust Analyzer is an
+experimental language analyzer for Rust, that implements LSP. Thanks
+to it, it can provide full support for completion, referencing,
+refactoring, report errors, etc to some editors like Emacs and
+VSCode, without needing different analyzers for different editors.
+
+Also, what is really cool about lsp-mode is that it seems that is very
+well supported and under active development, so make sure you
+regularly update your packages to get the latest features.
+
+** lsp-ui
+
+[[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] is an extension for lsp-mode that gives UI support for having
+more information about the code you're working on, like inline errors
+reporting, showing the types of the different variables you're
+declaring or even showing the full documentation of a function or a
+similar structure everytime you place the cursor over a reference to
+it. It can be really useful for daily developing or just learning on
+languages like Rust, which supports many of these features through the
+Rust Analyzer mentioned previously.
+
+** yasnippet
+
+[[https://github.com/joaotavora/yasnippet][Yasnippet]] is a package that allows you to store and write code
+snippets in a fast way. Personally, I don't use it directly, but it is
+required by lsp-ui and lsp-mode in order to apply code suggestions.
+
+TODO!
