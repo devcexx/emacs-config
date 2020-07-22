@@ -167,6 +167,9 @@
 	    (prettify-symbols-mode)
 	    ))
 
+;; Enable line numbers globally
+(global-linum-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General puropose packages ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
