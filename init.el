@@ -42,6 +42,12 @@
 ;; Themes, decorators and visuals ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Add configuration scripts from the config/ folder
+(add-to-list 'load-path (conf-rel-path "config/"))
+
+;; Ensures that all-the-icons is installed.
+(require 'config-all-the-icons)
+
 (use-package doom-themes
   :ensure t
   :config (load-theme 'doom-Iosvkem t))
@@ -49,7 +55,8 @@
 ;; Modeline
 (use-package doom-modeline
   :ensure t
-  :hook (after-init . doom-modeline-mode))
+  :after all-the-icons
+  :init (doom-modeline-mode 1))
 
 (use-package nyan-mode ;; Essential
   :ensure t
