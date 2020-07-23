@@ -47,27 +47,9 @@
 
 ;; Ensures that all-the-icons is installed.
 (require 'config-all-the-icons)
-
-(use-package doom-themes
-  :ensure t
-  :config (load-theme 'doom-Iosvkem t))
-
-;; Modeline
-(use-package doom-modeline
-  :ensure t
-  :after all-the-icons
-  :init (doom-modeline-mode 1))
-
-(use-package nyan-mode ;; Essential
-  :ensure t
-  :after doom-modeline
-  :config
-  (nyan-mode)
-  (nyan-start-animation))
-
-(use-package fancy-battery
-  :ensure t
-  :after doom-modeline)
+(require 'config-modeline)
+(require 'config-theme)
+(require 'config-prettify-symbols)
 
 ;; Kawaii rainbow delimiters
 (use-package rainbow-delimiters
@@ -132,42 +114,7 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; Prettify symbols mode
-;; Global symbols
-(add-hook 'prog-mode-hook
-	  (lambda ()
-	    (setq prettify-symbols-alist
-		  '(
-		    ("=>"  . ?⇒)
-		    ("->"  . ?→)
-		    ("!=" . ?≠)
-		    ("<=" . ?≤)
-		    (">=" . ?≥)
-		    ))
-	    (prettify-symbols-mode)))
-
-;; Mode-specific symbols
-(add-hook 'emacs-lisp-mode-hook
-	  (lambda ()
-	    (setq prettify-symbols-alist
-		  (append
-		   prettify-symbols-alist
-		   '(
-		     ("lambda" . ?λ)
-		     )))
-	    (prettify-symbols-mode)
-	    ))
-
-(add-hook 'python-mode-hook
-	  (lambda ()
-	    (setq prettify-symbols-alist
-		  (append
-		   prettify-symbols-alist
-		   '(
-		     ("lambda" . ?λ)
-		     )))
-	    (prettify-symbols-mode)
-	    ))
+(require 'config-prettify-symbols)
 
 ;; Enable line numbers globally
 (global-linum-mode)
