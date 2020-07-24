@@ -390,3 +390,13 @@
 ;; Shortcut to artist mode.
 (global-set-key (kbd "C-c C-a") 'artist-mode)
 
+;;;;;;;;;;;;;;;;;
+;; Other hooks ;;
+;;;;;;;;;;;;;;;;;
+
+;; This is practical to have it on prog-mode,
+;; plus fixes issues on lsp-ui trying to render on
+;; new lines and fucking up the GUI while coding.
+(add-hook 'prog-mode-hook
+	  (lambda () (setq truncate-lines t)))
+
