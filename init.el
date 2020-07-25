@@ -172,12 +172,15 @@
   (setq lsp-ui-sideline-show-hover t)
   (setq lsp-ui-sideline-show-code-actions t)
   (setq lsp-ui-sideline-update-mode "point")
-  (setq lsp-ui-sideline-delay 0.2)
+  (setq lsp-ui-sideline-delay 0)
+  (setq lsp-ui-doc-enable t)
+  (setq lsp-ui-doc-delay 2.5)
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
 
   :bind
-  ("C-c e e" . lsp-ui-flycheck-list))
+  ("C-c e e" . lsp-ui-flycheck-list)
+  ("C-c d" . lsp-ui-doc-show))
 
 ;; Used by lsp-mode for applying code suggestions
 (use-package yasnippet
