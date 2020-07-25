@@ -19,6 +19,10 @@
 ;; Enable desktop save mode
 (desktop-save-mode 1)
 
+;; Attempt to fix a bug that produces sometimes the desktop-save-mode
+;; to fail reading the desktop file.
+(setq desktop-restore-forces-onscreen nil)
+
 ;; Move temporal files to Emacs folder
 (setq backup-directory-alist
       `((".*" . , (conf-rel-path "temp"))))
