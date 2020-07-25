@@ -397,6 +397,10 @@
 ;; Shortcut to artist mode.
 (global-set-key (kbd "C-c C-a") 'artist-mode)
 
+;; Bind <Home> and <end> keys to beginning-of-buffer and end-of-buffer
+(global-set-key (kbd "<home>") 'beginning-of-buffer)
+(global-set-key (kbd "<end>") 'end-of-buffer)
+
 ;;;;;;;;;;;;;;;;;
 ;; Other hooks ;;
 ;;;;;;;;;;;;;;;;;
