@@ -9,6 +9,9 @@
 (defun conf-rel-path (path)
   (concat user-emacs-directory path))
 
+(defmacro emacs-27 ()
+  `(eq (symbol-value 'emacs-major-version) 27)) 
+
 ;; Disable right option modifier key on macOS
 (cond ((string-equal system-type "darwin")
        (setq mac-right-option-modifier nil)))
@@ -74,8 +77,10 @@
   (setq fci-rule-use-dashes nil)
   (setq fci-rule-column 120)) ;; Keep disabled fci by default (gives problems with Company)
 
-; Fuck off tabs. Still having issues with doom-modeline
-; Let's just wait until Emacs 27 is released.
+(when (emacs-27)
+  (global-tab-line-mode t)
+  (global-set-key (kbd "C-,") 'tab-line-switch-to-prev-tab)
+  (global-set-key (kbd "C-.") 'tab-line-switch-to-next-tab))
 
 ;; Cursor highlight
 ;; Only enabled when Emacs is running on a graphical interface
