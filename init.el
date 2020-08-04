@@ -77,8 +77,12 @@
   (setq fci-rule-use-dashes nil)
   (setq fci-rule-column 120)) ;; Keep disabled fci by default (gives problems with Company)
 
+;; Tabs
 (when (emacs-27)
   (global-tab-line-mode t)
+  (set-face-attribute 'tab-line-tab-current nil :foreground "#ffffff" :background nil :inherit 'highlight)
+  (set-face-attribute 'tab-line-highlight nil :foreground "#ffffff" :background "#bd158b")
+  (set-face-attribute 'tab-line-tab nil :background "gray35")
   (global-set-key (kbd "C-,") 'tab-line-switch-to-prev-tab)
   (global-set-key (kbd "C-.") 'tab-line-switch-to-next-tab))
 
