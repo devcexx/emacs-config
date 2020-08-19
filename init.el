@@ -278,6 +278,26 @@
 
   ;; Keep flydiff (real-time diff-hl mode) enabled.
   :hook (diff-hl-mode . diff-hl-flydiff-mode))
+
+(use-package hl-todo
+  :ensure t
+  :config
+  (setq hl-todo-keyword-faces
+	'(("TODO"   . "#FF0000")
+          ("FIXME"  . "#FF0000")
+          ("DEBUG"  . "#A020F0")
+          ("GOTCHA" . "#FF4500")
+          ("STUB"   . "#1E90FF")))
+
+  :bind
+  ("C-c C-t p" . hl-todo-previous)
+  ("C-c C-t n" . hl-todo-next)
+  ("C-c C-t o" . hl-todo-occur)
+  ("C-c C-t i" . hl-todo-insert)
+
+  :hook
+  (prog-mode . hl-todo-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Language-specific packages ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
