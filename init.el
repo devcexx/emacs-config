@@ -10,7 +10,13 @@
   (concat user-emacs-directory path))
 
 (defmacro emacs-27 ()
-  `(eq (symbol-value 'emacs-major-version) 27)) 
+  `(eq (symbol-value 'emacs-major-version) 27))
+
+;; High initial GC threshold for speeding up Emacs load.
+(setq gc-cons-threshold 1000000000)
+
+;; Required by lsp-mode for increasing performance.
+(setq read-process-output-max (* 3 (* 1024 1024)))
 
 ;; Disable right option modifier key on macOS
 (cond ((string-equal system-type "darwin")
@@ -170,12 +176,21 @@
   :hook
   (lsp-mode . lsp-signature-activate)
   
-  :config (require 'lsp-clients)
-  (define-key lsp-mode-map (kbd "C-c") lsp-command-map)
+  :init
+  (setq lsp-keymap-prefix "C-c")
   (setq lsp-lens-auto-enable t)
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-render-documentation nil))
+
+(use-package lsp-treemacs
+  :ensure t
+  :init
+  (lsp-treemacs-sync-mode 1)
+  :bind
+  ("C-c t s" . lsp-treemacs-symbols)
+  ("C-c t c" . lsp-treemacs-call-hierarchy)
+  ("C-c t t" . lsp-treemacs-type-hierarchy))
 
 (use-package lsp-ui
   :ensure t
@@ -185,7 +200,7 @@
   (setq lsp-ui-sideline-show-hover t)
   (setq lsp-ui-sideline-show-code-actions t)
   (setq lsp-ui-sideline-update-mode "point")
-  (setq lsp-ui-sideline-delay 0)
+  (setq lsp-ui-sideline-delay 0.2)
   (setq lsp-ui-doc-enable t)
   (setq lsp-ui-doc-delay 2.5)
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
@@ -338,14 +353,9 @@
 (use-package toml-mode
   :ensure t)
 
-(use-package rust-mode
+(use-package rustic
   :ensure t
-  :hook (rust-mode . lsp))
-(add-to-list 'auto-mode-alist '("\\.rs$" . rust-mode))
-
-(use-package cargo
-  :ensure t
-  :hook (rust-mode . cargo-minor-mode))
+  :mode ("\\.rs$" . rustic-mode))
 
 (defun kill-buffers()
   (let (buffer buffers)
@@ -430,6 +440,10 @@
 (global-set-key (kbd "<home>") 'beginning-of-buffer)
 (global-set-key (kbd "<end>") 'end-of-buffer)
 
+;; Debug
+(global-set-key (kbd "C-<") (lambda () (interactive) (profiler-start 'cpu+mem)))
+(global-set-key (kbd "C->") 'profiler-stop)
+
 ;;;;;;;;;;;;;;;;;
 ;; Other hooks ;;
 ;;;;;;;;;;;;;;;;;
@@ -440,3 +454,8 @@
 (add-hook 'prog-mode-hook
 	  (lambda () (setq truncate-lines t)))
 
+;; GC for cleaning up memory of Emacs initialization
+(garbage-collect)
+
+;; Setting up final 50MB GC threshold for supporting lsp-mode loads.
+(setq gc-cons-threshold 100000000)
