@@ -181,7 +181,13 @@
   (setq lsp-lens-auto-enable t)
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-signature-auto-activate t)
-  (setq lsp-signature-render-documentation nil))
+  (setq lsp-signature-render-documentation nil)
+
+  (setq lsp-rust-analyzer-display-chaining-hints t)
+  (setq lsp-rust-analyzer-display-parameter-hints t)
+  (setq lsp-rust-analyzer-server-display-inlay-hints t)
+  (setq lsp-rust-analyzer-inlay-hints-mode t))
+
 
 (use-package lsp-treemacs
   :ensure t
