@@ -175,6 +175,7 @@
   :commands lsp
   :hook
   (lsp-mode . lsp-signature-activate)
+  (lsp-mode . lsp-ui-mode)
   
   :init
   (setq lsp-keymap-prefix "C-c")
@@ -354,6 +355,12 @@
   :bind (("C-x n" . js2-next-error)))
 
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+(use-package typescript-mode
+  :ensure t
+  :hook
+  (typescript-mode . lsp))
+(add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode))
 
 ;; Rust integration
 (use-package toml-mode
