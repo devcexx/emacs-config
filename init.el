@@ -210,6 +210,7 @@
   (setq lsp-ui-sideline-delay 0.2)
   (setq lsp-ui-doc-enable t)
   (setq lsp-ui-doc-delay 2.5)
+  (setq lsp-ui-doc-position 'at-point)
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
 
