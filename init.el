@@ -14,6 +14,7 @@
 
 ;; High initial GC threshold for speeding up Emacs load.
 (setq gc-cons-threshold 1000000000)
+(global-auto-revert-mode t)
 
 ;; Required by lsp-mode for increasing performance.
 (setq read-process-output-max (* 3 (* 1024 1024)))
@@ -159,8 +160,12 @@
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode)
+  :bind
   :config
-
+  (define-key flycheck-mode-map flycheck-keymap-prefix nil)
+  (setq flycheck-keymap-prefix (kbd "C-c f"))
+  (define-key flycheck-mode-map flycheck-keymap-prefix
+    flycheck-command-map)
   (add-to-list 'display-buffer-alist
 	       `(,(rx bos "*Flycheck errors*" eos)
 		 (display-buffer-reuse-window
@@ -362,7 +367,11 @@
   :hook
   (typescript-mode . lsp))
 (add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx$" . typescript-mode))
+
+(use-package web-mode
+  :ensure t
+  :hook (web-mode . lsp))
+(add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
 
 ;; Rust integration
 (use-package toml-mode
