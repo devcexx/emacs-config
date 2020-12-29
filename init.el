@@ -181,7 +181,8 @@
   :hook
   (lsp-mode . lsp-signature-activate)
   (lsp-mode . lsp-ui-mode)
-  
+  :config
+  (require 'lsp-lens)
   :init
   (setq lsp-keymap-prefix "C-c")
   (setq lsp-lens-auto-enable t)
