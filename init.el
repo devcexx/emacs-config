@@ -421,6 +421,24 @@
 
 (provide 'center-rectangle)
 
+(defun projectile-kill-non-project-buffers ()
+  "Kill all the buffers that doesn't belong to the current project."
+
+  (interactive)
+  (let ((root (projectile-project-root)) (bufs (buffer-list (selected-frame))))
+    (when (null root) (user-error "Not in a Projectile buffer"))
+    (when (yes-or-no-p (format "Do you want to kill all the buffers that doesn't belong to \"%s\"? " root))
+      (dolist (buf bufs)
+	(let ((buf-name (buffer-name buf)))
+	  ; " ?" -> Treemacs buffers has an space at the beginning, because potato.
+	  (unless (or (projectile-project-buffer-p buf root)
+		      (string-match "^ ?\\*\\(\\scratch\\|Messages\\|Treemacs\\)" buf-name))
+
+	    (message "Killing buffer '%s'" buf-name)
+            (kill-buffer buf)))))))
+
+(provide 'projectile-kill-non-project-buffers)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Special keybindings ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -454,6 +472,9 @@
 ;; Fast close all opened buffers, for that situations that you have a thousand
 ;; opened buffers and you need to reboot your mind.
 (global-set-key (kbd "C-x C-k") 'clean-buffers)
+
+;; Pretty much for the same, but projectile-aware.
+(global-set-key (kbd "C-x p M-k") 'projectile-kill-non-project-buffers)
 
 ;; Remove the current line without copying it to the copy buffer.
 (global-set-key (kbd "M-k") 'delete-current-line)
