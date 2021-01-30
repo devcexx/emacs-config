@@ -69,6 +69,7 @@
 (require 'config-modeline)
 (require 'config-theme)
 (require 'config-prettify-symbols)
+(require 'config-diff-hl)
 (require 'active-minibuffer-lock-mode)
 (require 'util)
 
@@ -322,21 +323,6 @@
   :ensure t
   :bind (("C-x v" . magit-status)
          ("C-x M-v" . magit-dispatch-popup)))
-
-(use-package diff-hl
-  :ensure t
-  :config
-
-  ;; Match the background color of the fringe with the background
-  ;; color of the diff-hl faces.
-  (let ((default-background (face-attribute 'fringe :background)))
-    (set-face-attribute 'diff-hl-insert nil :foreground "#00ff00" :background default-background)
-    (set-face-attribute 'diff-hl-delete nil :foreground "#ff0000" :background default-background)
-    (set-face-attribute 'diff-hl-change nil :foreground "#da8548" :background default-background))
-  (global-diff-hl-mode)
-
-  ;; Keep flydiff (real-time diff-hl mode) enabled.
-  :hook (diff-hl-mode . diff-hl-flydiff-mode))
 
 (use-package hl-todo
   :ensure t
