@@ -1,4 +1,4 @@
-*
+/*
 !init.el
 !.gitignore
 !.gitattributes
@@ -9,3 +9,4 @@
 !beacon
 !/docs/*
 !/install/*
+!/config

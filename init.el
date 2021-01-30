@@ -64,6 +64,7 @@
 (require 'config-modeline)
 (require 'config-theme)
 (require 'config-prettify-symbols)
+(require 'active-minibuffer-lock-mode)
 
 ;; Kawaii rainbow delimiters
 (use-package rainbow-delimiters
@@ -146,6 +147,9 @@
 
 ;; Enable global hl mode
 (global-hl-line-mode 1)
+
+;; Enable active minibuffer lock mode
+(active-minibuffer-lock-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General puropose packages ;;
