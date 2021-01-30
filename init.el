@@ -111,7 +111,12 @@
 
 (use-package treemacs
   :ensure t
-  :bind ([f8] . treemacs))
+  :config
+  (treemacs-fringe-indicator-mode 'always)
+  (treemacs-follow-mode -1)
+  :bind
+  ([f8] . treemacs)
+  ("C-c t l" . treemacs-find-file))
 
 (use-package treemacs-projectile
   :ensure t
