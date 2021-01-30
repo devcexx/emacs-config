@@ -159,8 +159,7 @@
 (active-minibuffer-lock-mode 1)
 
 ;; Highlight the minibuffer on enable
-(add-hook 'minibuffer-setup-hook
-	  (lambda () (minibuffer-emph)))
+(add-hook 'minibuffer-setup-hook #'minibuffer-emph)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General puropose packages ;;
