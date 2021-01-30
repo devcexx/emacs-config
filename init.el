@@ -16,6 +16,11 @@
 (setq gc-cons-threshold 1000000000)
 (global-auto-revert-mode t)
 
+;; Set default fonts
+(when window-system
+(add-to-list 'default-frame-alist
+             '(font . "Hack-11")))
+
 ;; Required by lsp-mode for increasing performance.
 (setq read-process-output-max (* 3 (* 1024 1024)))
 
