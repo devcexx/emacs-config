@@ -225,7 +225,8 @@
   :bind
   ("C-c t s" . lsp-treemacs-symbols)
   ("C-c t c" . lsp-treemacs-call-hierarchy)
-  ("C-c t t" . lsp-treemacs-type-hierarchy))
+  ("C-c t t" . lsp-treemacs-type-hierarchy)
+  ("C-c t e" . lsp-treemacs-errors-list))
 
 (use-package lsp-ui
   :ensure t
