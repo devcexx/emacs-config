@@ -148,8 +148,9 @@
 
 (require 'config-prettify-symbols)
 
-;; Enable line numbers globally
-(global-linum-mode)
+;; Enable line numbers
+(dolist (hook '(prog-mode-hook text-mode-hook))
+  (add-hook hook #'linum-mode 1))
 
 ;; Enable global hl mode
 (global-hl-line-mode 1)
