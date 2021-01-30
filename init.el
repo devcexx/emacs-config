@@ -144,6 +144,9 @@
 ;; Enable line numbers globally
 (global-linum-mode)
 
+;; Enable global hl mode
+(global-hl-line-mode 1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General puropose packages ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
