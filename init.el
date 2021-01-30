@@ -65,6 +65,7 @@
 (require 'config-theme)
 (require 'config-prettify-symbols)
 (require 'active-minibuffer-lock-mode)
+(require 'util)
 
 ;; Kawaii rainbow delimiters
 (use-package rainbow-delimiters
@@ -150,6 +151,10 @@
 
 ;; Enable active minibuffer lock mode
 (active-minibuffer-lock-mode 1)
+
+;; Highlight the minibuffer on enable
+(add-hook 'minibuffer-setup-hook
+	  (lambda () (minibuffer-emph)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General puropose packages ;;

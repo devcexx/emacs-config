@@ -1,21 +1,12 @@
-(defun minibuffer--beep ()
-  "Highlight the minibuffer when attention is required."
-  (invert-face 'minibuffer-prompt)
-  (run-with-timer 0.2 nil #'invert-face 'minibuffer-prompt)
-  (run-with-timer 0.4 nil #'invert-face 'minibuffer-prompt)
-  (run-with-timer 0.6 nil #'invert-face 'minibuffer-prompt)
-
-  (unless visible-bell
-    (beep)
-    (run-with-timer 0.2 nil #'beep)
-    (run-with-timer 0.4 nil #'beep)))
+(require 'util)
 
 (defun ensure--minibuffer-selected-if-active (&rest _)
   "Ensure that, if there's an active minibuffer, then it is selected, and select it and visually notify the user otherwise."
   (let ((minibuf (active-minibuffer-window)) (cwindow (selected-window)))
     (when (and minibuf (not (eq minibuf cwindow)))
       (select-window minibuf)
-      (minibuffer--beep)
+      (minibuffer-emph)
+      (beep-emph)
       )))
 
 (define-minor-mode active-minibuffer-lock-mode
