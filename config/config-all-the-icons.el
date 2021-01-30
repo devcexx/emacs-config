@@ -20,11 +20,10 @@
 	     (all-the-icons-install-fonts t)))
     ))
 
-
-(use-package all-the-icons
-  :ensure t
-  :config (all-the-icons-fonts-install-if-not-present))
-
+(when window-system
+  (use-package all-the-icons
+    :ensure t
+    :config (all-the-icons-fonts-install-if-not-present)))
 
 (provide 'all-the-icons-fonts-install-if-not-present)
 (provide 'config-all-the-icons)
