@@ -152,6 +152,13 @@
 (dolist (hook '(prog-mode-hook text-mode-hook))
   (add-hook hook #'linum-mode 1))
 
+;; I have an issue on my Emacs, where the margin gets completely
+;; fucked up when zooming in and out, and seems to be related to the
+;; linum-mode. Disable and enable it each time the scale factor
+;; changes as a workaround.
+(add-hook 'text-scale-mode-hook
+	  (lambda () (when linum-mode (linum-mode -1) (linum-mode 1))))
+
 ;; Enable global hl mode
 (global-hl-line-mode 1)
 
