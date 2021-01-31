@@ -122,6 +122,7 @@
   :config
   (treemacs-fringe-indicator-mode 'always)
   (treemacs-follow-mode -1)
+  (add-hook 'window-setup-hook #'treemacs)
   :bind
   ([f8] . treemacs)
   ("C-c t l" . treemacs-find-file))
