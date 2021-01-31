@@ -2,6 +2,81 @@
 ;;; Commentary:
 ;;; Code:
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Definition of Emacs run modes and features ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst emacs-run-mode 'default
+  "Define the way Emacs was configured for the current instance.
+The run mode affects to the way some packages or features might be loaded
+or not in the init file.
+There are a few run modes that might fit different use cases:
+  - :default: Runs Emacs fully featured, for using it as a
+    single-instance main editor.
+  - :spot: Runs Emacs with most of the features, but accomodates it
+    for using as a secondary editor instance, for using it for editing
+    simple and very specific files.
+  - :light: Runs Emacs disabling most of its features, keeping
+    only basic features like some programming modes, suitable for
+    running Emacs on a remote server.")
+
+(defconst run-modes-features
+  '(
+    (default .
+      (position-beacon
+       desktop-save-mode
+       linum
+       theme
+       nyancat
+       modeline
+       treemacs
+       treemacs-autoshow
+       projectile
+       elcord
+       lsp
+       lsp-ui))
+
+    (spot .
+      (position-beacon
+       linum
+       theme
+       nyancat
+       modeline
+       treemacs
+       projectile
+       lsp
+       lsp-ui))
+
+    (light . (theme linum))))
+
+(defmacro features-enabled-list ()
+  "Return the list of features currently enabled by the run mode."
+  `(alist-get emacs-run-mode run-modes-features))
+
+(defun feature-enabled-p (feature)
+  "Return whether the given FEATURE is currently enabled on the current run mode."
+  (member feature (features-enabled-list)))
+
+(defun features-enabled-p (features)
+  "Return whether the given set of FEATURES is currently enabled on the current run mode."
+   (let ((feature-list (features-enabled-list)))
+     (seq-every-p (lambda (feature) (member feature feature-list)) features)))
+
+(let* ((env-name "EMACS_RUN_MODE")
+       (env-value (getenv env-name))
+       (mode (pcase env-value
+	       (`nil 'default)
+	       ("default" 'default)
+	       ("spot" 'spot)
+	       ("light" 'light))))
+
+  (unless mode
+    (error "Invalid run mode specified in %s: '%s'" env-name env-value))
+
+  (setq emacs-run-mode mode))
+
+(message "Run mode selected: %S" emacs-run-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Basic configurations ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14,7 +89,12 @@
 
 ;; High initial GC threshold for speeding up Emacs load.
 (setq gc-cons-threshold 1000000000)
+
+;; Enable auto revert from disk when file changes.
 (global-auto-revert-mode t)
+
+;; Prevent startup welcome Emacs buffer from being shown.
+(setq inhibit-startup-message t)
 
 ;; Set default fonts
 (when window-system
@@ -32,7 +112,8 @@
 (load custom-file 'noerror)
 
 ;; Enable desktop save mode
-(desktop-save-mode 1)
+(when (feature-enabled-p 'desktop-save-mode)
+  (desktop-save-mode 1))
 
 ;; Attempt to fix a bug that produces sometimes the desktop-save-mode
 ;; to fail reading the desktop file.
@@ -67,7 +148,10 @@
 ;; Ensures that all-the-icons is installed.
 (require 'config-all-the-icons)
 (require 'config-modeline)
-(require 'config-theme)
+
+(when (feature-enabled-p 'theme)
+  (require 'config-theme))
+
 (require 'config-prettify-symbols)
 (require 'config-diff-hl)
 (require 'active-minibuffer-lock-mode)
@@ -103,33 +187,38 @@
 
 ;; Cursor highlight
 ;; Only enabled when Emacs is running on a graphical interface
-(use-package beacon
-  :ensure t
-  :config
-  (setq beacon-color "#fc20bb")
-  )
+(when (feature-enabled-p 'position-beacon)
+  (use-package beacon
+    :ensure t
+    :config
+    (setq beacon-color "#fc20bb"))
 
-;; Disable beacon if we're on a tty
-;; Dunno why but it must to be done on window-setup-hook, otherwise it does
-;; not have any effect
-(add-hook 'window-setup-hook (lambda () (if window-system (beacon-mode 1) (beacon-mode -1))))
+  ;; Disable beacon if we're on a tty
+  ;; Dunno why but it must to be done on window-setup-hook, otherwise it does
+  ;; not have any effect
+  (add-hook 'window-setup-hook (lambda () (if window-system (beacon-mode 1) (beacon-mode -1)))))
 
 (use-package browse-kill-ring
   :ensure t)
 
-(use-package treemacs
-  :ensure t
-  :config
-  (treemacs-fringe-indicator-mode 'always)
-  (treemacs-follow-mode -1)
-  (add-hook 'window-setup-hook #'treemacs)
-  :bind
-  ([f8] . treemacs)
-  ("C-c t l" . treemacs-find-file))
+(when (feature-enabled-p 'treemacs)
+  (use-package treemacs
+    :ensure t
+    :config
+    (treemacs-fringe-indicator-mode 'always)
+    (treemacs-follow-mode -1)
 
-(use-package treemacs-projectile
-  :ensure t
-  :after treemacs projectile)
+    (when (feature-enabled-p 'treemacs-autoshow)
+      (add-hook 'window-setup-hook #'treemacs))
+
+    :bind
+    ([f8] . treemacs)
+    ("C-c t l" . treemacs-find-file))
+
+  (when (feature-enabled-p 'projectile)
+    (use-package treemacs-projectile
+      :ensure t
+      :after treemacs projectile)))
 
 ;; WindMove: move between buffers using shift+arrows
 (when (fboundp 'windmove-default-keybindings)
@@ -151,15 +240,16 @@
 (require 'config-prettify-symbols)
 
 ;; Enable line numbers
-(dolist (hook '(prog-mode-hook text-mode-hook))
-  (add-hook hook #'linum-mode 1))
+(when (feature-enabled-p 'linum)
+  (dolist (hook '(prog-mode-hook text-mode-hook))
+    (add-hook hook #'linum-mode 1))
 
-;; I have an issue on my Emacs, where the margin gets completely
-;; fucked up when zooming in and out, and seems to be related to the
-;; linum-mode. Disable and enable it each time the scale factor
-;; changes as a workaround.
-(add-hook 'text-scale-mode-hook
-	  (lambda () (when linum-mode (linum-mode -1) (linum-mode 1))))
+  ;; I have an issue on my Emacs, where the margin gets completely
+  ;; fucked up when zooming in and out, and seems to be related to the
+  ;; linum-mode. Disable and enable it each time the scale factor
+  ;; changes as a workaround.
+  (add-hook 'text-scale-mode-hook
+	    (lambda () (when linum-mode (linum-mode -1) (linum-mode 1)))))
 
 ;; Enable global hl mode
 (global-hl-line-mode 1)
@@ -177,11 +267,11 @@
 ;; Elcord: support for Discord. The elcord folder contains a git
 ;; submodule that points to a custom elcord mode without reconnect
 ;; messages repeating each 15 seconds.
-(add-to-list 'load-path (conf-rel-path "elcord/"))
-(require 'elcord)
-(setq elcord-silent-mode 1)
-(elcord-mode)
-
+(when (feature-enabled-p 'elcord)
+  (add-to-list 'load-path (conf-rel-path "elcord/"))
+  (require 'elcord)
+  (setq elcord-silent-mode 1)
+  (elcord-mode))
 
 (use-package undo-tree
   :ensure t
@@ -206,60 +296,64 @@
 		 (window-height   . 0.20))))
 
 ;; LSP Mode
-(use-package lsp-mode
-  :ensure t
-  :commands lsp
-  :hook
-  (lsp-mode . lsp-signature-activate)
-  (lsp-mode . lsp-ui-mode)
-  :config
-  (require 'lsp-lens)
-  :init
-  (setq lsp-keymap-prefix "C-c")
-  (setq lsp-lens-auto-enable t)
-  (setq lsp-headerline-breadcrumb-enable t)
-  (setq lsp-signature-auto-activate t)
-  (setq lsp-signature-render-documentation nil)
+(when (feature-enabled-p 'lsp)
+  (use-package lsp-mode
+    :ensure t
+    :commands lsp
+    :hook
+    (lsp-mode . lsp-signature-activate)
+    (lsp-mode . lsp-ui-mode)
+    :config
+    (require 'lsp-lens)
+    :init
+    (setq lsp-keymap-prefix "C-c")
+    (setq lsp-lens-auto-enable t)
+    (setq lsp-headerline-breadcrumb-enable t)
+    (setq lsp-signature-auto-activate t)
+    (setq lsp-signature-render-documentation nil)
 
-  (setq lsp-rust-analyzer-display-chaining-hints t)
-  (setq lsp-rust-analyzer-display-parameter-hints t)
-  (setq lsp-rust-analyzer-server-display-inlay-hints t)
-  (setq lsp-rust-analyzer-inlay-hints-mode t))
+    (setq lsp-rust-analyzer-display-chaining-hints t)
+    (setq lsp-rust-analyzer-display-parameter-hints t)
+    (setq lsp-rust-analyzer-server-display-inlay-hints t)
+    (setq lsp-rust-analyzer-inlay-hints-mode t))
 
 
-(use-package lsp-treemacs
-  :ensure t
-  :init
-  (lsp-treemacs-sync-mode 1)
-  :bind
-  ("C-c t s" . lsp-treemacs-symbols)
-  ("C-c t c" . lsp-treemacs-call-hierarchy)
-  ("C-c t t" . lsp-treemacs-type-hierarchy)
-  ("C-c t e" . lsp-treemacs-errors-list))
+  (when (feature-enabled-p 'treemacs)
+    (use-package lsp-treemacs
+      :ensure t
+      :init
+      (lsp-treemacs-sync-mode 1)
+      :bind
+      ("C-c t s" . lsp-treemacs-symbols)
+      ("C-c t c" . lsp-treemacs-call-hierarchy)
+      ("C-c t t" . lsp-treemacs-type-hierarchy)
+      ("C-c t e" . lsp-treemacs-errors-list)))
 
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode
-  :config
-  (setq lsp-ui-sideline-show-diagnostics t)
-  (setq lsp-ui-sideline-show-hover t)
-  (setq lsp-ui-sideline-show-code-actions t)
-  (setq lsp-ui-sideline-update-mode "point")
-  (setq lsp-ui-sideline-delay 0.2)
-  (setq lsp-ui-doc-enable t)
-  (setq lsp-ui-doc-delay 2.5)
-  (setq lsp-ui-doc-position 'at-point)
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  (when (feature-enabled-p 'lsp-ui)
+    (use-package lsp-ui
+      :ensure t
+      :commands lsp-ui-mode
+      :config
+      (setq lsp-ui-sideline-show-diagnostics t)
+      (setq lsp-ui-sideline-show-hover t)
+      (setq lsp-ui-sideline-show-code-actions t)
+      (setq lsp-ui-sideline-update-mode "point")
+      (setq lsp-ui-sideline-delay 0.2)
+      (setq lsp-ui-doc-enable t)
+      (setq lsp-ui-doc-delay 2.5)
+      (setq lsp-ui-doc-position 'at-point)
+      (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+      (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
 
-  :bind
-  ("C-c e e" . lsp-ui-flycheck-list)
-  ("C-c d" . lsp-ui-doc-show))
+      :bind
+      ("C-c e e" . lsp-ui-flycheck-list)
+      ("C-c d" . lsp-ui-doc-show)))
 
-;; Used by lsp-mode for applying code suggestions
-(use-package yasnippet
-  :ensure t
-  :config (yas-global-mode 1))
+  ;; Used by lsp-mode for applying code suggestions
+  ;; Only used when lsp feature is active, since it's only used on it.
+  (use-package yasnippet
+    :ensure t
+    :config (yas-global-mode 1)))
 
 ;; exec-path-from-shell: Set the Emacs path value
 ;; to the value of the user shell PATH variable value.
@@ -269,18 +363,19 @@
   (add-hook 'after-init-hook 'exec-path-from-shell-initialize))
 
 ;; Projectile: project management for Emacs
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-mode)
-  (setq projectile-enable-caching t))
+(when (feature-enabled-p 'projectile)
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-mode)
+    (setq projectile-enable-caching t))
 
 
-(use-package helm-projectile
-  :ensure t
-  :after ((projectile))
-  :bind (("C-c p" . helm-projectile)
-         ("C-c P" . helm-projectile-switch-project)))
+  (use-package helm-projectile
+    :ensure t
+    :after ((projectile))
+    :bind (("C-c p" . helm-projectile)
+           ("C-c P" . helm-projectile-switch-project))))
 
 ;; Helm: enhaced completion window.
 (use-package helm
