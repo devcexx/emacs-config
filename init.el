@@ -160,7 +160,10 @@ There are a few run modes that might fit different use cases:
   (require 'config-theme))
 
 (require 'config-prettify-symbols)
-(require 'config-diff-hl)
+
+(when window-system
+  (require 'config-diff-hl))
+
 (require 'active-minibuffer-lock-mode)
 (require 'util)
 
