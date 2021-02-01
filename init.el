@@ -23,7 +23,8 @@ There are a few run modes that might fit different use cases:
 (defconst run-modes-features
   '(
     (default .
-      (position-beacon
+      (package-refresh
+       position-beacon
        desktop-save-mode
        linum
        theme
@@ -37,7 +38,8 @@ There are a few run modes that might fit different use cases:
        lsp-ui))
 
     (spot .
-      (position-beacon
+      (package-refresh
+       position-beacon
        linum
        theme
        nyancat
@@ -130,15 +132,17 @@ There are a few run modes that might fit different use cases:
 
 ;; Init repositories
 (require 'package)
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-			 ("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
 
-;; First install use-package
-(unless package-archive-contents
-  (package-refresh-contents))
+(when (feature-enabled-p 'package-refresh)
+  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+			   ("melpa" . "https://melpa.org/packages/")))
 
-(unless (package-installed-p 'use-package)
+  ;; First install use-package
+  (unless package-archive-contents
+    (package-refresh-contents)))
+
+(unless (package-installed-p 'package-refresh)
   (package-install 'use-package))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -148,7 +152,7 @@ There are a few run modes that might fit different use cases:
 ;; Add configuration scripts from the config/ folder
 (add-to-list 'load-path (conf-rel-path "config/"))
 
-;; Ensures that all-the-icons is installed.
+;; ;; Ensures that all-the-icons is installed.
 (require 'config-all-the-icons)
 (require 'config-modeline)
 
