@@ -32,6 +32,11 @@ There are a few run modes that might fit different use cases:
        modeline
        treemacs
        treemacs-autoshow
+       fill-column-indicator
+       flycheck
+       company
+       helm
+       magit
        projectile
        elcord
        lsp
@@ -49,7 +54,7 @@ There are a few run modes that might fit different use cases:
        lsp
        lsp-ui))
 
-    (light . (theme linum))))
+    (light . (linum undo-tree company flycheck helm))))
 
 (defmacro features-enabled-list ()
   "Return the list of features currently enabled by the run mode."
@@ -178,13 +183,14 @@ There are a few run modes that might fit different use cases:
 (setq scroll-step 2)
 
 ;; Fill column indicator
-(use-package fill-column-indicator
-  :ensure t
-  :config
-  (setq fci-rule-width 2)
-  (setq fci-rule-color "darkred")
-  (setq fci-rule-use-dashes nil)
-  (setq fci-rule-column 120)) ;; Keep disabled fci by default (gives problems with Company)
+(when (feature-enabled-p 'fill-column-indicator)
+  (use-package fill-column-indicator
+    :ensure t
+    :config
+    (setq fci-rule-width 2)
+    (setq fci-rule-color "darkred")
+    (setq fci-rule-use-dashes nil)
+    (setq fci-rule-column 120))) ;; Keep disabled fci by default (gives problems with Company)
 
 ;; Tabs
 (when (emacs-27)
@@ -283,9 +289,10 @@ There are a few run modes that might fit different use cases:
   (setq elcord-silent-mode 1)
   (elcord-mode))
 
-(use-package undo-tree
-  :ensure t
-  :config (global-undo-tree-mode))
+(when (feature-enabled-p 'undo-tree)
+  (use-package undo-tree
+    :ensure t
+    :config (global-undo-tree-mode)))
 
 ;; Flycheck: syntax check on the fly
 (use-package flycheck
@@ -380,21 +387,22 @@ There are a few run modes that might fit different use cases:
     (projectile-mode)
     (setq projectile-enable-caching t))
 
-
-  (use-package helm-projectile
-    :ensure t
-    :after ((projectile))
-    :bind (("C-c p" . helm-projectile)
-           ("C-c P" . helm-projectile-switch-project))))
+  (when (feature-enabled-p 'helm)
+    (use-package helm-projectile
+      :ensure t
+      :after ((projectile))
+      :bind (("C-c p" . helm-projectile)
+             ("C-c P" . helm-projectile-switch-project)))))
 
 ;; Helm: enhaced completion window.
-(use-package helm
-  :ensure t
-  :bind (("M-x" . helm-M-x)
-	 ("C-x b" . helm-buffers-list)
-	 ("C-x C-f" . helm-find-files))
-  :init (setq helm-split-window-inside-p t)
-  :config (helm-autoresize-mode 1))
+(when (feature-enabled-p 'helm)
+  (use-package helm
+    :ensure t
+    :bind (("M-x" . helm-M-x)
+	   ("C-x b" . helm-buffers-list)
+	   ("C-x C-f" . helm-find-files))
+    :init (setq helm-split-window-inside-p t)
+    :config (helm-autoresize-mode 1)))
 
 ;; Multi-term: terminal for emacs.
 (use-package multi-term
@@ -403,32 +411,34 @@ There are a few run modes that might fit different use cases:
   :bind ("C-x t" . multi-term-dedicated-open))
 
 ;; company: autocompletion.
-(use-package company
-  :ensure t
-  :config
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1)
-  
-  :bind
-  ("C-c SPC" . company-complete)
-  ("C-c C-SPC" . company-complete))
-(add-hook 'after-init-hook 'global-company-mode)
+(when (feature-enabled-p 'company)
+  (use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 1)
+    
+    :bind
+    ("C-c SPC" . company-complete)
+    ("C-c C-SPC" . company-complete))
+  (global-company-mode)
 
-(use-package company-terraform
-  :ensure t
-  :init (company-terraform-init))
+  (use-package company-terraform
+    :ensure t
+    :init (company-terraform-init))
 
-(use-package company-jedi
-  :ensure t
-  :init
-  (add-to-list 'company-backends 'company-jedi)
-  (setq jedi:tooltip-method '('popup)))
+  (use-package company-jedi
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-jedi)
+    (setq jedi:tooltip-method '('popup))))
 
 ;; Magit: Git client
-(use-package magit
-  :ensure t
-  :bind (("C-x v" . magit-status)
-         ("C-x M-v" . magit-dispatch-popup)))
+(when (feature-enabled-p 'magit)
+  (use-package magit
+    :ensure t
+    :bind (("C-x v" . magit-status)
+           ("C-x M-v" . magit-dispatch-popup))))
 
 (use-package hl-todo
   :ensure t
