@@ -234,7 +234,9 @@ There are a few run modes that might fit different use cases:
   (when (feature-enabled-p 'projectile)
     (use-package treemacs-projectile
       :ensure t
-      :after treemacs projectile)))
+      :after treemacs projectile
+      :config
+      (global-set-key (kbd "C-c p a") 'treemacs-add-project))))
 
 ;; WindMove: move between buffers using shift+arrows
 (when (fboundp 'windmove-default-keybindings)
@@ -391,8 +393,8 @@ There are a few run modes that might fit different use cases:
     (use-package helm-projectile
       :ensure t
       :after ((projectile))
-      :bind (("C-c p" . helm-projectile)
-             ("C-c P" . helm-projectile-switch-project)))))
+      :bind (("C-c p p" . helm-projectile)
+             ("C-c p P" . helm-projectile-switch-project)))))
 
 ;; Helm: enhaced completion window.
 (when (feature-enabled-p 'helm)
@@ -437,7 +439,7 @@ There are a few run modes that might fit different use cases:
 (when (feature-enabled-p 'magit)
   (use-package magit
     :ensure t
-    :bind (("C-x v" . magit-status)
+    :bind (("C-x v v" . magit-status)
            ("C-x M-v" . magit-dispatch-popup))))
 
 (use-package hl-todo
