@@ -26,6 +26,7 @@ There are a few run modes that might fit different use cases:
       (package-refresh
        position-beacon
        desktop-save-mode
+       open-in-emacs
        linum
        theme
        nyancat
@@ -170,6 +171,7 @@ There are a few run modes that might fit different use cases:
   (require 'config-diff-hl))
 
 (require 'active-minibuffer-lock-mode)
+(require 'open-in-emacs-mode)
 (require 'util)
 
 ;; Kawaii rainbow delimiters
@@ -274,6 +276,10 @@ There are a few run modes that might fit different use cases:
 
 ;; Enable active minibuffer lock mode
 (active-minibuffer-lock-mode 1)
+
+;; Enable Open In Emacs mode
+(when (feature-enabled-p 'open-in-emacs)
+  (open-in-emacs-mode 1))
 
 ;; Highlight the minibuffer on enable
 (add-hook 'minibuffer-setup-hook #'minibuffer-emph)

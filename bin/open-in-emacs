@@ -1,0 +1,11 @@
+#!/bin/bash
+args=()
+for arg in "$@"
+do
+    real=$(realpath "$arg")
+    args[${#args[@]}]="string:$real"
+done
+
+dbus-send --session --print-reply --dest="org.gnu.Emacs" \
+	  "/org/gnu/Emacs/OpenInEmacs" \
+	  "org.gnu.Emacs.OpenInEmacs.OpenInEmacs" "${args[@]}"
