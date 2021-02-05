@@ -112,7 +112,7 @@ There are a few run modes that might fit different use cases:
              '(font . "Hack-11")))
 
 ;; Required by lsp-mode for increasing performance.
-(setq read-process-output-max (* 3 (* 1024 1024)))
+(setq read-process-output-max (* 10 (* 1024 1024)))
 
 ;; Disable right option modifier key on macOS
 (cond ((string-equal system-type "darwin")
@@ -334,7 +334,8 @@ There are a few run modes that might fit different use cases:
     (setq lsp-rust-analyzer-display-chaining-hints t)
     (setq lsp-rust-analyzer-display-parameter-hints t)
     (setq lsp-rust-analyzer-server-display-inlay-hints t)
-    (setq lsp-rust-analyzer-inlay-hints-mode t))
+    (setq lsp-rust-analyzer-inlay-hints-mode t)
+    (setq lsp-rust-analyzer-cargo-load-out-dirs-from-check t))
 
 
   (when (feature-enabled-p 'treemacs)
