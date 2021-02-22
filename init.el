@@ -434,13 +434,7 @@ There are a few run modes that might fit different use cases:
 
   (use-package company-terraform
     :ensure t
-    :init (company-terraform-init))
-
-  (use-package company-jedi
-    :ensure t
-    :init
-    (add-to-list 'company-backends 'company-jedi)
-    (setq jedi:tooltip-method '('popup))))
+    :init (company-terraform-init)))
 
 ;; Magit: Git client
 (when (feature-enabled-p 'magit)
