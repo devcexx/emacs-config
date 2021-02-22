@@ -7,7 +7,7 @@
   "Calculate the width of the current buffer fringe."
   (if left-fringe-width
       left-fringe-width
-    (first (window-fringes))
+    (car (window-fringes))
   ))
 
 (defun effective--char-height ()
