@@ -148,7 +148,7 @@ There are a few run modes that might fit different use cases:
   (unless package-archive-contents
     (package-refresh-contents)))
 
-(unless (package-installed-p 'package-refresh)
+(unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
