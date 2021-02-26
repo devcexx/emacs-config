@@ -41,7 +41,8 @@ There are a few run modes that might fit different use cases:
        projectile
        elcord
        lsp
-       lsp-ui))
+       lsp-ui
+       undo-tree))
 
     (spot .
       (package-refresh
@@ -53,7 +54,8 @@ There are a few run modes that might fit different use cases:
        treemacs
        projectile
        lsp
-       lsp-ui))
+       lsp-ui
+       undo-tree))
 
     (light . (linum undo-tree company flycheck helm))))
 
@@ -341,7 +343,8 @@ There are a few run modes that might fit different use cases:
     (setq lsp-rust-analyzer-display-parameter-hints t)
     (setq lsp-rust-analyzer-server-display-inlay-hints t)
     (setq lsp-rust-analyzer-inlay-hints-mode t)
-    (setq lsp-rust-analyzer-cargo-load-out-dirs-from-check t))
+    (setq lsp-rust-analyzer-cargo-load-out-dirs-from-check t)
+    (setq lsp-rust-all-features t))
 
 
   (when (feature-enabled-p 'treemacs)
