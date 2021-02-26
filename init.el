@@ -228,7 +228,11 @@ There are a few run modes that might fit different use cases:
     (treemacs-fringe-indicator-mode 'always)
     (treemacs-follow-mode -1)
 
-    (when (feature-enabled-p 'treemacs-autoshow)
+    ;; Only show Treemacs automatically when activated and there's any
+    ;; project to show. Otherwise, Treemacs will interactively ask
+    ;; user to add a new one, which is horrible to have it during
+    ;; Emacs initialization.
+    (when (and (feature-enabled-p 'treemacs-autoshow) (not (treemacs-workspace->is-empty?)))
       (add-hook 'window-setup-hook #'treemacs))
 
     :bind
