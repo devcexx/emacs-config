@@ -27,32 +27,28 @@
 
 (use-package diff-hl
   :ensure t
-  :config
+  :init
+  (message "Package init")
 
-  ;; Match the background color of the fringe with the background
-  ;; color of the diff-hl faces.
-  (let ((default-background (face-attribute 'fringe :background)))
-    (set-face-attribute 'diff-hl-insert nil :foreground "#00ff00" :background default-background)
-    (set-face-attribute 'diff-hl-delete nil :foreground "#ff0000" :background default-background)
-    (set-face-attribute 'diff-hl-change nil :foreground "#da8548" :background default-background))
-
-  ;; Set the bitmap function before the first calculation, to prevent
-  ;; delays applying the bitmap on the fringe.
-  (setq diff-hl-fringe-bmp-function (lambda (type pos) 'diff-hl-def-bitmap))
-
-  ;; Keep bitmap synced when text scale mode is triggered.
-  (add-hook 'text-scale-mode-hook #'update--diff-hl-bmp)
-
-  ;; Also keep it synced when font changes (just in case).
-  (add-hook 'after-setting-font-hook #'update--diff-hl-bmp)
-
-  ;; The font might not be loaded at this point and, therefore, char
-  ;; height calculations might be wrong. Defer it to prevent that.
-  (add-hook 'window-setup-hook #'update--diff-hl-bmp)
-  
-  (global-diff-hl-mode)
-  ;; Keep flydiff (real-time diff-hl mode) enabled.
   :hook
-  (diff-hl-mode . diff-hl-flydiff-mode))
+  (after-init
+   . (lambda ()
+       (global-diff-hl-mode 1)
+       (diff-hl-flydiff-mode 1)
+
+       ;; Set the bitmap function before the first calculation, to prevent
+       ;; delays applying the bitmap on the fringe.
+       (setq diff-hl-fringe-bmp-function (lambda (type pos) 'diff-hl-def-bitmap))
+
+       ;; Match the background color of the fringe with the background
+       ;; color of the diff-hl faces.
+       (let ((default-background (face-attribute 'fringe :background)))
+	 (set-face-attribute 'diff-hl-insert nil :foreground "#00ff00" :background default-background)
+	 (set-face-attribute 'diff-hl-delete nil :foreground "#ff0000" :background default-background)
+	 (set-face-attribute 'diff-hl-change nil :foreground "#da8548" :background default-background))))
+  (text-scale-mode . update--diff-hl-bmp)
+  (after-setting-font . update--diff-hl-bmp)
+  (window-setup . update--diff-hl-bmp))
+
 
 (provide 'config-diff-hl)
