@@ -649,7 +649,6 @@ There are a few run modes that might fit different use cases:
 ;; Bind <Home> and <end> keys to beginning-of-buffer and end-of-buffer
 (global-set-key (kbd "<home>") 'beginning-of-buffer)
 (global-set-key (kbd "<end>") 'end-of-buffer)
-(global-set-key (kbd "C-c m") 'cua-rectangle-mark-mode)
 
 (global-set-key (kbd "C-L") (kbd "C-SPC C-SPC"))
 
