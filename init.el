@@ -106,6 +106,9 @@ There are a few run modes that might fit different use cases:
 ;; Prevent startup welcome Emacs buffer from being shown.
 (setq inhibit-startup-message t)
 
+;; Recursive minibuffers.
+(setq enable-recursive-minibuffers t)
+
 ;; Prevent showing warning about cl package deprecated.
 (setq byte-compile-warnings '(cl-functions))
 
