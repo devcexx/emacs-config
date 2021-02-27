@@ -268,6 +268,8 @@ There are a few run modes that might fit different use cases:
   (add-hook 'text-scale-mode-hook
 	    (lambda () (when linum-mode (linum-mode -1) (linum-mode 1)))))
 
+(column-number-mode t)
+
 ;; Enable global hl mode
 (global-hl-line-mode 1)
 
