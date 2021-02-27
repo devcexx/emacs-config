@@ -238,7 +238,7 @@ There are a few run modes that might fit different use cases:
       :ensure t
       :after treemacs projectile
       :config
-      (global-set-key (kbd "C-c p a") 'treemacs-add-project))))
+      (global-set-key (kbd "C-x p a") 'treemacs-add-project))))
 
 ;; WindMove: move between buffers using shift+arrows
 (when (fboundp 'windmove-default-keybindings)
@@ -408,8 +408,8 @@ There are a few run modes that might fit different use cases:
     (use-package helm-projectile
       :ensure t
       :after ((projectile))
-      :bind (("C-c p p" . helm-projectile)
-             ("C-c p P" . helm-projectile-switch-project)))))
+      :bind (("C-x p p" . helm-projectile)
+             ("C-x p P" . helm-projectile-switch-project)))))
 
 ;; Helm: enhaced completion window.
 (when (feature-enabled-p 'helm)
@@ -538,7 +538,7 @@ There are a few run modes that might fit different use cases:
       (setq buffer (pop buffers))
       (if (not (string-equal (buffer-name buffer) "*scratch*")) (kill-buffer buffer) nil))))
 
-(defun clean-buffers()
+(defun clean-buffers() 
   (interactive)
   (if (yes-or-no-p "Do you really want to clean all buffers? ")
       (kill-buffers) nil))
