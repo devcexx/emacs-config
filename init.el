@@ -37,7 +37,7 @@ There are a few run modes that might fit different use cases:
        flycheck
        company
        helm
-       magit
+       git
        projectile
        elcord
        lsp
@@ -172,7 +172,7 @@ There are a few run modes that might fit different use cases:
 
 (require 'config-prettify-symbols)
 
-(when window-system
+(when (and window-system (feature-enabled-p 'git))
   (require 'config-diff-hl))
 
 (require 'active-minibuffer-lock-mode)
@@ -451,7 +451,7 @@ There are a few run modes that might fit different use cases:
     :init (company-terraform-init)))
 
 ;; Magit: Git client
-(when (feature-enabled-p 'magit)
+(when (feature-enabled-p 'git)
   (use-package magit
     :ensure t
     :bind (("C-x v v" . magit-status)

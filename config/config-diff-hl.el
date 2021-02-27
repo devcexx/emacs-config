@@ -48,7 +48,9 @@
 	 (set-face-attribute 'diff-hl-change nil :foreground "#da8548" :background default-background))))
   (text-scale-mode . update--diff-hl-bmp)
   (after-setting-font . update--diff-hl-bmp)
-  (window-setup . update--diff-hl-bmp))
+  (window-setup . update--diff-hl-bmp)
+  (magit-pre-refresh . diff-hl-magit-pre-refresh)
+  (magit-post-refresh . diff-hl-magit-post-refresh))
 
 
 (provide 'config-diff-hl)
