@@ -97,6 +97,9 @@ There are a few run modes that might fit different use cases:
 (defmacro emacs-27 ()
   `(eq (symbol-value 'emacs-major-version) 27))
 
+(defmacro emacs-28 ()
+  `(eq (symbol-value 'emacs-major-version) 28))
+
 ;; High initial GC threshold for speeding up Emacs load.
 (setq gc-cons-threshold 1000000000)
 
@@ -285,6 +288,11 @@ There are a few run modes that might fit different use cases:
 
 ;; Highlight the minibuffer on enable
 (add-hook 'minibuffer-setup-hook #'minibuffer-emph)
+
+(when (emacs-28)
+  ;; TODO Change tab-line-tabs-function to filter special buffers
+  ;; (like helm, messages...) ?
+  (add-hook 'change-major-mode-hook (lambda () (global-tab-line-mode 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General puropose packages ;;
@@ -658,6 +666,7 @@ With argument ARG, do this that many times."
 (global-set-key (kbd "M-k") 'kill-line)
 (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 (global-set-key (kbd "M-<delete>") 'kill-word)
+;; TODO Duplicate line!
 
 ;; Shortcut to artist mode.
 (global-set-key (kbd "C-c C-a") 'artist-mode)
@@ -665,8 +674,26 @@ With argument ARG, do this that many times."
 ;; Bind <Home> and <end> keys to beginning-of-buffer and end-of-buffer
 (global-set-key (kbd "<home>") 'beginning-of-buffer)
 (global-set-key (kbd "<end>") 'end-of-buffer)
-
 (global-set-key (kbd "C-c m") 'cua-rectangle-mark-mode)
+
+;; Used for hiding buffers without closing them, especially for tabs
+;; mode.
+(global-set-key (kbd "C-x K") 'bury-buffer)
+
+;; Navigation keybindings
+(global-set-key (kbd "C-,") 'previous-buffer)
+(global-set-key (kbd "C-.") 'next-buffer)
+
+(defun last-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer nil)))
+(provide 'prev-buffer)
+
+;; Previous buffer
+;; TODO Improve with some sort of list of last recent
+;; visited buffers, would be cool.
+(global-set-key (kbd "C-<") 'last-buffer)
+
 
 ;;;;;;;;;;;;;;;;;
 ;; Other hooks ;;
