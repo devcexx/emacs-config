@@ -666,6 +666,8 @@ With argument ARG, do this that many times."
 (global-set-key (kbd "<home>") 'beginning-of-buffer)
 (global-set-key (kbd "<end>") 'end-of-buffer)
 
+(global-set-key (kbd "C-c m") 'cua-rectangle-mark-mode)
+
 ;;;;;;;;;;;;;;;;;
 ;; Other hooks ;;
 ;;;;;;;;;;;;;;;;;
