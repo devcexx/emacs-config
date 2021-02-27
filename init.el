@@ -313,6 +313,19 @@ There are a few run modes that might fit different use cases:
   (setq elcord-silent-mode 1)
   (elcord-mode))
 
+(use-package smartparens
+  :ensure t
+  :init
+  (require 'smartparens-config)
+  :config
+  (set-face-attribute 'sp-show-pair-match-content-face nil :background "#5a5d5e")
+  :bind
+  ("C-c [" . sp-beginning-of-sexp)
+  ("C-c ]" . sp-end-of-sexp)
+  :hook
+  (prog-mode . show-smartparens-mode)
+  (prog-mode . smartparens-mode))
+
 (when (feature-enabled-p 'undo-tree)
   (use-package undo-tree
     :ensure t

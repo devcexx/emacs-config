@@ -11,3 +11,4 @@
 !/install/*
 !/config
 !/bin
+!/highlight-sexps.el
