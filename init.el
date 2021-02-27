@@ -231,7 +231,12 @@ There are a few run modes that might fit different use cases:
     ;; user to add a new one, which is horrible to have it during
     ;; Emacs initialization.
     (when (and (feature-enabled-p 'treemacs-autoshow) (not (treemacs-workspace->is-empty?)))
-      (add-hook 'window-setup-hook #'treemacs))
+      (add-hook 'window-setup-hook
+		(lambda ()
+		  (let ((last-window (selected-window)))
+		    (treemacs)
+		    (select-window last-window))
+		  )))
 
     :bind
     ([f8] . treemacs)
