@@ -169,6 +169,7 @@ There are a few run modes that might fit different use cases:
 ;; ;; Ensures that all-the-icons is installed.
 (require 'config-all-the-icons)
 (require 'config-modeline)
+(require 'text-utils)
 
 (when (feature-enabled-p 'theme)
   (require 'config-theme))
@@ -666,7 +667,8 @@ With argument ARG, do this that many times."
 (global-set-key (kbd "M-k") 'kill-line)
 (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 (global-set-key (kbd "M-<delete>") 'kill-word)
-;; TODO Duplicate line!
+
+(global-set-key (kbd "C-c n") 'duplicate-line)
 
 ;; Shortcut to artist mode.
 (global-set-key (kbd "C-c C-a") 'artist-mode)
