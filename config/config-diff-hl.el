@@ -27,6 +27,10 @@
 
 (use-package diff-hl
   :ensure t
+  :bind
+  ("C-x v ." . diff-hl-next-hunk)
+  ("C-x v ," . diff-hl-previous-hunk)
+  ("C-x v n" . diff-hl-revert-hunk)
   :hook
   (after-init
    . (lambda ()
