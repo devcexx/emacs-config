@@ -635,7 +635,8 @@ There are a few run modes that might fit different use cases:
 
 ;; Used for hiding buffers without closing them, especially for tabs
 ;; mode.
-(global-set-key (kbd "C-x K") 'bury-buffer)
+(global-set-key (kbd "C-x k") 'bury-buffer)
+(global-set-key (kbd "C-x K") 'kill-buffer)
 
 ;; Navigation keybindings
 (global-set-key (kbd "C-,") 'previous-buffer)
