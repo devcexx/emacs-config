@@ -554,51 +554,6 @@ There are a few run modes that might fit different use cases:
 
 (provide 'clean-buffers)
 
-(defun delete-current-line ()
-  "Delete (not kill) the current line."
-  (interactive)
-  (save-excursion
-    (delete-region
-     (progn (forward-visible-line 0) (point))
-     (progn (forward-visible-line 1) (point)))))
-
-(provide 'delete-current-line)
-
-;; Evily copied from kill-word and backward-kill-word, but changing it
-;; to 'delete', for preventing filling the kill ring buffer with the
-;; killed stuff.
-
-(defun delete-word (arg)
-  "Delete characters forward until encountering the end of a word.
-With argument ARG, do this that many times."
-  (interactive "p")
-  (delete-region (point) (progn (forward-word arg) (point))))
-
-(provide 'delete-word)
-
-(defun backward-delete-word (arg)
-  "Delete characters backward until encountering the beginning of a word.
-With argument ARG, do this that many times."
-  (interactive "p")
-  (delete-word (- arg)))
-
-(provide 'backward-delete-word)
-
-(defun center-rectangle (beg end)
-  (interactive "*r")
-  (kill-rectangle beg end)
-  (with-temp-buffer
-    (yank-rectangle)
-    (setq fill-column (current-column))
-    (center-region (point-min) (point-max))
-    (goto-char (point-max))
-    (move-to-column fill-column t)
-    (kill-rectangle (point-min) (point)))
-  (goto-char beg)
-  (yank-rectangle))
-
-(provide 'center-rectangle)
-
 (defun projectile-kill-non-project-buffers ()
   "Kill all the buffers that doesn't belong to the current project."
 
