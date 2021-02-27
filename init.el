@@ -625,10 +625,6 @@ There are a few run modes that might fit different use cases:
 (global-set-key (kbd "<home>") 'beginning-of-buffer)
 (global-set-key (kbd "<end>") 'end-of-buffer)
 
-;; Debug
-(global-set-key (kbd "C-<") (lambda () (interactive) (profiler-start 'cpu+mem)))
-(global-set-key (kbd "C->") 'profiler-stop)
-
 ;;;;;;;;;;;;;;;;;
 ;; Other hooks ;;
 ;;;;;;;;;;;;;;;;;
