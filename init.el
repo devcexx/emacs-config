@@ -301,6 +301,11 @@ There are a few run modes that might fit different use cases:
     :ensure t
     :config (global-undo-tree-mode)))
 
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode t))
+
 ;; Flycheck: syntax check on the fly
 (use-package flycheck
   :ensure t
