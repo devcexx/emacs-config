@@ -406,10 +406,16 @@ There are a few run modes that might fit different use cases:
   (use-package helm
     :ensure t
     :bind (("M-x" . helm-M-x)
-	   ("C-x b" . helm-buffers-list)
+	   ("C-x b" . helm-mini)
+	   ("C-x C-b" . helm-buffers-list)
 	   ("C-x C-f" . helm-find-files))
-    :init (setq helm-split-window-inside-p t)
-    :config (helm-autoresize-mode 1)))
+    :config
+    (helm-autoresize-mode 1)
+    (setq helm-split-window-inside-p t
+	  helm-candidate-number-limit 500
+	  helm-buffers-fuzzy-matching t
+	  helm-recentf-fuzzy-match t
+	  helm-M-x-fuzzy-match t)))
 
 ;; Multi-term: terminal for emacs.
 (use-package multi-term
