@@ -555,6 +555,26 @@ There are a few run modes that might fit different use cases:
 
 (provide 'delete-current-line)
 
+;; Evily copied from kill-word and backward-kill-word, but changing it
+;; to 'delete', for preventing filling the kill ring buffer with the
+;; killed stuff.
+
+(defun delete-word (arg)
+  "Delete characters forward until encountering the end of a word.
+With argument ARG, do this that many times."
+  (interactive "p")
+  (delete-region (point) (progn (forward-word arg) (point))))
+
+(provide 'delete-word)
+
+(defun backward-delete-word (arg)
+  "Delete characters backward until encountering the beginning of a word.
+With argument ARG, do this that many times."
+  (interactive "p")
+  (delete-word (- arg)))
+
+(provide 'backward-delete-word)
+
 (defun center-rectangle (beg end)
   (interactive "*r")
   (kill-rectangle beg end)
@@ -625,8 +645,19 @@ There are a few run modes that might fit different use cases:
 ;; Pretty much for the same, but projectile-aware.
 (global-set-key (kbd "C-x p M-k") 'projectile-kill-non-project-buffers)
 
-;; Remove the current line without copying it to the copy buffer.
-(global-set-key (kbd "M-k") 'delete-current-line)
+;; I don't like commands like kill-word, kill-line to fill the kill
+;; ring buffer by default.  Here, I'm pointing its default keybindings
+;; to versions of these functions that doesn't save the killed region
+;; into the buffer, but just deleting instead. The original kill-word
+;; and kill-line functions will be available through alternate
+;; keybindings.
+(global-set-key (kbd "C-k") 'delete-current-line)
+(global-set-key (kbd "C-<backspace>") 'backward-delete-word)
+(global-set-key (kbd "C-<delete>") 'delete-word)
+
+(global-set-key (kbd "M-k") 'kill-line)
+(global-set-key (kbd "M-<backspace>") 'backward-kill-word)
+(global-set-key (kbd "M-<delete>") 'kill-word)
 
 ;; Shortcut to artist mode.
 (global-set-key (kbd "C-c C-a") 'artist-mode)
