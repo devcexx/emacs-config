@@ -27,9 +27,6 @@
 
 (use-package diff-hl
   :ensure t
-  :init
-  (message "Package init")
-
   :hook
   (after-init
    . (lambda ()
