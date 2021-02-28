@@ -106,6 +106,9 @@ There are a few run modes that might fit different use cases:
 ;; Enable auto revert from disk when file changes.
 (global-auto-revert-mode t)
 
+;; Allow repeating C-u C-SPC.
+(setq set-mark-command-repeat-pop t)
+
 ;; Prevent startup welcome Emacs buffer from being shown.
 (setq inhibit-startup-message t)
 
