@@ -11,4 +11,4 @@
 !/install/*
 !/config
 !/bin
-!/highlight-sexps.el
+!/early-init.el
