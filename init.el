@@ -295,7 +295,7 @@ There are a few run modes that might fit different use cases:
 (active-minibuffer-lock-mode 1)
 
 ;; Enable Open In Emacs mode
-(when (and (system-type 'gnu/linux) (feature-enabled-p 'open-in-emacs)
+(when (and (eq system-type 'gnu/linux) (feature-enabled-p 'open-in-emacs))
   (open-in-emacs-mode 1))
 
 ;; Highlight the minibuffer on enable
