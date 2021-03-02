@@ -183,7 +183,10 @@ There are a few run modes that might fit different use cases:
   (require 'config-diff-hl))
 
 (require 'active-minibuffer-lock-mode)
-(require 'open-in-emacs-mode)
+
+(when (eq system-type 'gnu/linux)
+  (require 'open-in-emacs-mode))
+
 (require 'util)
 
 ;; Kawaii rainbow delimiters
