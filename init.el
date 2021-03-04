@@ -5,7 +5,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Definition of Emacs run modes and features ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defconst emacs-run-mode 'default
   "Define the way Emacs was configured for the current instance.
 The run mode affects to the way some packages or features might be loaded
@@ -161,6 +160,21 @@ There are a few run modes that might fit different use cases:
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
+;; If variable set, then will print emacs startup time and write a
+;; message when each file is loaded, for helping package loading
+;; debugging.
+(when (getenv "EMACS_DEBUG_LOADING")
+  (add-hook 'after-init-hook
+            `(lambda ()
+               (let ((elapsed
+                      (float-time
+                       (time-subtract after-init-time before-init-time))))
+                 (message "Loading %s...done (%.2fs) [after-init]"
+                          ,load-file-name elapsed))) t)
+
+  (setq use-package-verbose t))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Themes, decorators and visuals ;;
@@ -663,6 +677,10 @@ There are a few run modes that might fit different use cases:
 ;; Navigation keybindings
 (global-set-key (kbd "C-,") 'previous-buffer)
 (global-set-key (kbd "C-.") 'next-buffer)
+
+;; Debug keybindings
+(global-set-key (kbd "C-x & ,") (lambda () (interactive) (profiler-start 'cpu+mem)))
+(global-set-key (kbd "C-x & .") (lambda () (interactive) (profiler-stop) (profiler-report)))
 
 (defun last-buffer ()
   (interactive)
