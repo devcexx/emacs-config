@@ -543,7 +543,8 @@ There are a few run modes that might fit different use cases:
 ;; autex: LaTeX integration
 (use-package auctex
   :ensure t
-  :mode ("\\.tex\\'" . latex-mode))
+  :mode ("\\.tex\\'" . latex-mode)
+  :hook (latex-mode . lsp))
 
 ;; js2-mode: Javascript integration
 (use-package js2-mode
@@ -573,7 +574,8 @@ There are a few run modes that might fit different use cases:
 
 (use-package rustic
   :ensure t
-  :mode ("\\.rs\\'" . rustic-mode))
+  :mode ("\\.rs\\'" . rustic-mode)
+  :hook (rustic-mode . lsp))
 
 (defun kill-buffers()
   (let (buffer buffers)
