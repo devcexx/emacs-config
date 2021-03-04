@@ -192,7 +192,7 @@ There are a few run modes that might fit different use cases:
 ;; Kawaii rainbow delimiters
 (use-package rainbow-delimiters
   :ensure t
-  :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Scrolling tweaking
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
@@ -223,6 +223,7 @@ There are a few run modes that might fit different use cases:
   (add-hook 'window-setup-hook (lambda () (if window-system (beacon-mode 1) (beacon-mode -1)))))
 
 (use-package browse-kill-ring
+  :commands browse-kill-ring
   :ensure t)
 
 (when (feature-enabled-p 'treemacs)
@@ -252,25 +253,20 @@ There are a few run modes that might fit different use cases:
     (use-package treemacs-projectile
       :ensure t
       :after treemacs projectile
-      :config
-      (global-set-key (kbd "C-x p a") 'treemacs-add-project))))
+      :bind ("C-x p a" . treemacs-add-project))))
 
 ;; WindMove: move between buffers using shift+arrows
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
 
-(load-file (conf-rel-path "buffer-move/buffer-move.el"))
-
-(global-set-key (kbd "<C-S-up>")     'buf-move-up)
-(global-set-key (kbd "<C-S-down>")   'buf-move-down)
-(global-set-key (kbd "<C-S-left>")   'buf-move-left)
-(global-set-key (kbd "<C-S-right>")  'buf-move-right)
-
-;; Disable bars and unnecesary menus
-(tooltip-mode -1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
+(add-to-list 'load-path (conf-rel-path "buffer-move/"))
+(use-package buffer-move
+  :ensure nil
+  :bind
+  ("<C-S-up>" . buf-move-up)
+  ("<C-S-down>" . buf-move-down)
+  ("<C-S-left>" . buf-move-left)
+  ("<C-S-right>" . buf-move-right))
 
 (require 'config-prettify-symbols)
 
@@ -335,18 +331,18 @@ There are a few run modes that might fit different use cases:
 (when (feature-enabled-p 'undo-tree)
   (use-package undo-tree
     :ensure t
+    :defer t
     :config (global-undo-tree-mode)))
 
 (use-package which-key
   :ensure t
+  :defer t
   :config
   (which-key-mode t))
 
 ;; Flycheck: syntax check on the fly
 (use-package flycheck
   :ensure t
-  :init (global-flycheck-mode)
-  :bind
   :config
   (define-key flycheck-mode-map flycheck-keymap-prefix nil)
   (setq flycheck-keymap-prefix (kbd "C-c f"))
@@ -358,7 +354,8 @@ There are a few run modes that might fit different use cases:
 		  display-buffer-in-side-window)
 		 (side            . bottom)
 		 (reusable-frames . visible)
-		 (window-height   . 0.20))))
+		 (window-height   . 0.20)))
+  (global-flycheck-mode))
 
 ;; LSP Mode
 (when (feature-enabled-p 'lsp)
@@ -388,7 +385,7 @@ There are a few run modes that might fit different use cases:
   (when (feature-enabled-p 'treemacs)
     (use-package lsp-treemacs
       :ensure t
-      :init
+      :config
       (lsp-treemacs-sync-mode 1)
       :bind
       ("C-c t s" . lsp-treemacs-symbols)
@@ -420,14 +417,14 @@ There are a few run modes that might fit different use cases:
   ;; Only used when lsp feature is active, since it's only used on it.
   (use-package yasnippet
     :ensure t
+    :after lsp-mode
     :config (yas-global-mode 1)))
 
 ;; exec-path-from-shell: Set the Emacs path value
 ;; to the value of the user shell PATH variable value.
 (use-package exec-path-from-shell
   :ensure t
-  :config
-  (add-hook 'after-init-hook 'exec-path-from-shell-initialize))
+  :hook (after-init . exec-path-from-shell-initialize))
 
 ;; Projectile: project management for Emacs
 (when (feature-enabled-p 'projectile)
@@ -470,18 +467,16 @@ There are a few run modes that might fit different use cases:
 (when (feature-enabled-p 'company)
   (use-package company
     :ensure t
+    :defer t
+    :init
+    (global-company-mode)
     :config
     (setq company-idle-delay 0)
     (setq company-minimum-prefix-length 1)
     
     :bind
     ("C-c SPC" . company-complete)
-    ("C-c C-SPC" . company-complete))
-  (global-company-mode)
-
-  (use-package company-terraform
-    :ensure t
-    :init (company-terraform-init)))
+    ("C-c C-SPC" . company-complete)))
 
 ;; Magit: Git client
 (when (feature-enabled-p 'git)
@@ -533,36 +528,38 @@ There are a few run modes that might fit different use cases:
 
 ;; autex: LaTeX integration
 (use-package auctex
-  :defer t
-  :ensure t)
+  :ensure t
+  :mode ("\\.tex\\'" . latex-mode))
 
 ;; js2-mode: Javascript integration
 (use-package js2-mode
   :ensure t
+  :mode
+  ("\\.js\\'" . js2-mode)
+  ("\\.jsx\\'" . js2-jsx-mode)
   :config
   (define-key js2-mode-map (kbd "M-.") nil)
   :bind (("C-x n" . js2-next-error)))
 
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-
 (use-package typescript-mode
   :ensure t
+  :mode ("\\.ts\\'" . typescript-mode)
   :hook
   (typescript-mode . lsp))
-(add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode))
 
 (use-package web-mode
   :ensure t
+  :mode ("\\.tsx\\'" . web-mode)
   :hook (web-mode . lsp))
-(add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
 
 ;; Rust integration
 (use-package toml-mode
+  :mode ("\\.toml\\'" . toml-mode)
   :ensure t)
 
 (use-package rustic
   :ensure t
-  :mode ("\\.rs$" . rustic-mode))
+  :mode ("\\.rs\\'" . rustic-mode))
 
 (defun kill-buffers()
   (let (buffer buffers)

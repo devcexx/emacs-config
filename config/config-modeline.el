@@ -5,9 +5,8 @@
 (when (feature-enabled-p 'modeline)
   (use-package doom-modeline
     :ensure t
-    :defer t
     :after all-the-icons
-    :init (doom-modeline-mode 1))
+    :config (doom-modeline-mode 1))
 
   (when (feature-enabled-p 'nyancat)
     (use-package nyan-mode ;; Essential
