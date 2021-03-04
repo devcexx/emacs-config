@@ -102,6 +102,10 @@ There are a few run modes that might fit different use cases:
 ;; High initial GC threshold for speeding up Emacs load.
 (setq gc-cons-threshold 1000000000)
 
+;; Enable delete selection mode by default. I hate the default
+;; behaviour.
+(delete-selection-mode 1)
+
 ;; Enable auto revert from disk when file changes.
 (global-auto-revert-mode t)
 
