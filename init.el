@@ -611,7 +611,7 @@ There are a few run modes that might fit different use cases:
 	(let ((buf-name (buffer-name buf)))
 	  ; " ?" -> Treemacs buffers has an space at the beginning, because potato.
 	  (unless (or (projectile-project-buffer-p buf root)
-		      (string-match "^ ?\\*\\(\\scratch\\|Messages\\|Treemacs\\)" buf-name))
+		      (string-match "^ ?\\*\\(\\scratch\\|Messages\\|Treemacs\\|tab-line-hscroll\\)" buf-name))
 
 	    (message "Killing buffer '%s'" buf-name)
             (kill-buffer buf)))))))
