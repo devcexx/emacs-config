@@ -190,6 +190,7 @@ There are a few run modes that might fit different use cases:
 ;; ;; Ensures that all-the-icons is installed.
 (require 'config-all-the-icons)
 (require 'config-modeline)
+(require 'config-linum-relative)
 (require 'text-utils)
 
 (when (feature-enabled-p 'theme)
@@ -216,6 +217,10 @@ There are a few run modes that might fit different use cases:
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
 (setq mouse-wheel-progressive-speed t)
 (setq scroll-step 2)
+
+(use-package linum-relative
+  :ensure t
+  :commands linum-relative-mode)
 
 ;; Fill column indicator
 (when (feature-enabled-p 'fill-column-indicator)
@@ -683,6 +688,8 @@ There are a few run modes that might fit different use cases:
 ;; Navigation keybindings
 (global-set-key (kbd "C-,") 'previous-buffer)
 (global-set-key (kbd "C-.") 'next-buffer)
+
+(global-set-key (kbd "<f6>") 'linum-relative-transient)
 
 ;; Debug keybindings
 (global-set-key (kbd "C-x & ,") (lambda () (interactive) (profiler-start 'cpu+mem)))
