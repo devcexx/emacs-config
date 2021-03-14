@@ -422,6 +422,7 @@ There are a few run modes that might fit different use cases:
       :commands lsp-ui-mode
       :config
       (setq lsp-ui-sideline-show-diagnostics t)
+      (setq lsp-ui-sideline-diagnostic-max-lines 10)
       (setq lsp-ui-sideline-show-hover t)
       (setq lsp-ui-sideline-show-code-actions t)
       (setq lsp-ui-sideline-update-mode "point")
