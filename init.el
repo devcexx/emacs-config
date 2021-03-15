@@ -345,8 +345,10 @@ There are a few run modes that might fit different use cases:
   :config
   (set-face-attribute 'sp-show-pair-match-content-face nil :background "#5a5d5e")
   :bind
-  ("C-c [" . sp-beginning-of-sexp)
-  ("C-c ]" . sp-end-of-sexp)
+  ("M-[" . sp-beginning-of-sexp)
+  ("M-]" . sp-end-of-sexp)
+  ("M-{" . sp-unwrap-sexp)
+  ("M-}" . sp-backward-unwrap-sexp)
   :hook
   (prog-mode . show-smartparens-mode)
   (prog-mode . smartparens-mode))
