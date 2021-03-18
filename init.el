@@ -102,6 +102,10 @@ There are a few run modes that might fit different use cases:
 ;; High initial GC threshold for speeding up Emacs load.
 (setq gc-cons-threshold 1000000000)
 
+;; Setup fringes
+(when window-system
+  (set-fringe-mode '(8 . 0)))
+
 ;; Enable delete selection mode by default. I hate the default
 ;; behaviour.
 (delete-selection-mode 1)
@@ -199,10 +203,36 @@ There are a few run modes that might fit different use cases:
 (require 'config-prettify-symbols)
 
 (when (and window-system (feature-enabled-p 'git))
-  (require 'config-diff-hl))
+  (use-package git-gutter-fringe
+    :ensure t
+    :config
+    (global-set-key (kbd "C-x v n") 'git-gutter:next-hunk)
+    (global-set-key (kbd "C-x v p") 'git-gutter:previous-hunk)
+    (global-set-key (kbd "C-x v /") 'git-gutter:revert-hunk)
+    (global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
+
+    (set-face-foreground 'git-gutter-fr:modified "#da8548")
+    (set-face-foreground 'git-gutter-fr:added    "#00ff00")
+    (set-face-foreground 'git-gutter-fr:deleted  "#ff0000")
+
+    (let ((fringe
+	   (eval-when-compile
+	     (fringe-helper-convert
+	      "..XXXX.."
+	      "..XXXX.."
+	      "..XXXX.."
+	      "..XXXX.."
+	      "..XXXX.."
+	      "..XXXX.."
+	      "..XXXX.."
+	      "..XXXX.."))))
+
+      (define-fringe-bitmap 'git-gutter-fr:added fringe nil nil '(top repeat))
+      (define-fringe-bitmap 'git-gutter-fr:deleted fringe nil nil '(top repeat))
+      (define-fringe-bitmap 'git-gutter-fr:modified fringe nil nil '(top repeat)))
+    (global-git-gutter-mode +1)))
 
 (require 'active-minibuffer-lock-mode)
-
 (when (eq system-type 'gnu/linux)
   (require 'open-in-emacs-mode))
 
