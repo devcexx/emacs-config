@@ -617,7 +617,8 @@ There are a few run modes that might fit different use cases:
 (use-package rustic
   :ensure t
   :mode ("\\.rs\\'" . rustic-mode)
-  :hook (rustic-mode . lsp))
+  :hook (rustic-mode . lsp)
+  :bind (("C-c C-c f" . rustic-format-file)))
 
 (defun kill-buffers()
   (let (buffer buffers)
