@@ -434,6 +434,7 @@ There are a few run modes that might fit different use cases:
     (setq lsp-rust-analyzer-server-display-inlay-hints t)
     (setq lsp-rust-analyzer-inlay-hints-mode t)
     (setq lsp-rust-analyzer-cargo-load-out-dirs-from-check t)
+    (setq lsp-rust-analyzer-proc-macro-enable t)
     (setq lsp-rust-all-features t))
 
 
