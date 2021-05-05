@@ -751,6 +751,18 @@ There are a few run modes that might fit different use cases:
 (add-hook 'prog-mode-hook
 	  (lambda () (setq truncate-lines t)))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; Work configuration ;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+(let* ((amzn-config-folder (conf-rel-path "amzn"))
+       (amzn-entry-point (concat amzn-config-folder "/init.el")))
+
+  (when (file-exists-p amzn-entry-point)
+    (message "Will load work configuration...")
+    (load-file amzn-entry-point)))
+
 ;; GC for cleaning up memory of Emacs initialization
 (garbage-collect)
 
