@@ -283,6 +283,7 @@ There are a few run modes that might fit different use cases:
 (when (feature-enabled-p 'treemacs)
   (use-package treemacs
     :ensure t
+    :demand t
     :config
     (treemacs-fringe-indicator-mode 'always)
     (treemacs-follow-mode -1)
