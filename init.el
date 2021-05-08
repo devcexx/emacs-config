@@ -387,14 +387,11 @@ There are a few run modes that might fit different use cases:
 (when (feature-enabled-p 'undo-tree)
   (use-package undo-tree
     :ensure t
-    :defer t
-    :config (global-undo-tree-mode)))
+    :init (global-undo-tree-mode)))
 
 (use-package which-key
   :ensure t
-  :defer t
-  :config
-  (which-key-mode t))
+  :init (which-key-mode 1))
 
 ;; Flycheck: syntax check on the fly
 (use-package flycheck
