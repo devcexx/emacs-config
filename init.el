@@ -58,6 +58,7 @@ There are a few run modes that might fit different use cases:
 
     (light . (linum undo-tree company flycheck helm))))
 
+(setq create-lockfiles nil)
 (defmacro features-enabled-list ()
   "Return the list of features currently enabled by the run mode."
   `(alist-get emacs-run-mode run-modes-features))
@@ -435,7 +436,8 @@ There are a few run modes that might fit different use cases:
     (setq lsp-rust-analyzer-inlay-hints-mode t)
     (setq lsp-rust-analyzer-cargo-load-out-dirs-from-check t)
     (setq lsp-rust-analyzer-proc-macro-enable t)
-    (setq lsp-rust-all-features t))
+    (setq lsp-rust-all-features t)
+    (setq lsp-completion-use-last-result t))
 
 
   (when (feature-enabled-p 'treemacs)
