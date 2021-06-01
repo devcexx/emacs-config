@@ -131,6 +131,12 @@ There are a few run modes that might fit different use cases:
 (add-to-list 'default-frame-alist
              '(font . "Hack-11")))
 
+;; Specific terminal configs
+(unless window-system
+  (xterm-mouse-mode t)
+  (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 2)))
+  (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 2))))
+
 ;; Required by lsp-mode for increasing performance.
 (setq read-process-output-max (* 10 (* 1024 1024)))
 
@@ -377,7 +383,7 @@ There are a few run modes that might fit different use cases:
   :config
   (set-face-attribute 'sp-show-pair-match-content-face nil :background "#5a5d5e")
   :bind
-  ("M-[" . sp-beginning-of-sexp)
+ ; ("M-[" . sp-beginning-of-sexp)
   ("M-]" . sp-end-of-sexp)
   ("M-{" . sp-unwrap-sexp)
   ("M-}" . sp-backward-unwrap-sexp)
