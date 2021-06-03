@@ -204,6 +204,9 @@ There are a few run modes that might fit different use cases:
 (require 'config-linum-relative)
 (require 'text-utils)
 
+(when (feature-enabled-p 'flycheck)
+  (require 'config-flycheck))
+
 (when (feature-enabled-p 'theme)
   (require 'config-theme))
 
@@ -398,23 +401,6 @@ There are a few run modes that might fit different use cases:
 (use-package which-key
   :ensure t
   :init (which-key-mode 1))
-
-;; Flycheck: syntax check on the fly
-(use-package flycheck
-  :ensure t
-  :config
-  (define-key flycheck-mode-map flycheck-keymap-prefix nil)
-  (setq flycheck-keymap-prefix (kbd "C-c f"))
-  (define-key flycheck-mode-map flycheck-keymap-prefix
-    flycheck-command-map)
-  (add-to-list 'display-buffer-alist
-	       `(,(rx bos "*Flycheck errors*" eos)
-		 (display-buffer-reuse-window
-		  display-buffer-in-side-window)
-		 (side            . bottom)
-		 (reusable-frames . visible)
-		 (window-height   . 0.20)))
-  (global-flycheck-mode))
 
 ;; LSP Mode
 (when (feature-enabled-p 'lsp)
