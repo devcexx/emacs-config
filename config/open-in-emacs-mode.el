@@ -36,6 +36,9 @@
     (dbus-unregister-object open-in-emacs--dbus-object)
     (setq open-in-emacs--dbus-object nil)))
 
+(defun open-in-emacs-available ()
+  (functionp 'dbus-register-service))
+
 (define-minor-mode open-in-emacs-mode
   "Minor mode that enables opening files through a DBus request."
   :init-value nil

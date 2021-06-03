@@ -240,8 +240,7 @@ There are a few run modes that might fit different use cases:
     (global-git-gutter-mode +1)))
 
 (require 'active-minibuffer-lock-mode)
-(when (eq system-type 'gnu/linux)
-  (require 'open-in-emacs-mode))
+(require 'open-in-emacs-mode)
 
 (require 'util)
 
@@ -352,7 +351,7 @@ There are a few run modes that might fit different use cases:
 (active-minibuffer-lock-mode 1)
 
 ;; Enable Open In Emacs mode
-(when (and (eq system-type 'gnu/linux) (feature-enabled-p 'open-in-emacs))
+(when (and (open-in-emacs-available) (feature-enabled-p 'open-in-emacs))
   (open-in-emacs-mode 1))
 
 ;; Highlight the minibuffer on enable
