@@ -532,9 +532,12 @@ There are a few run modes that might fit different use cases:
     :defer t
     :init
     (global-company-mode)
-    :config
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 1)
+    :custom
+    (company-echo-delay 0)
+    (company-idle-delay 0.15)
+    (company-minimum-prefix-length 2)
+    (company-tooltip-flip-when-above t)
+    (company-require-match nil)
     
     :bind
     ("C-c SPC" . company-complete)
