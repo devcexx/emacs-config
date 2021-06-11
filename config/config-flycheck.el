@@ -2,6 +2,7 @@
   :ensure t
   :config
   (define-key flycheck-mode-map flycheck-keymap-prefix nil)
+  (setq flycheck-indication-mode 'left-margin)
   (setq flycheck-keymap-prefix (kbd "C-c f"))
   (define-key flycheck-mode-map flycheck-keymap-prefix
     flycheck-command-map)

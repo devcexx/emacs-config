@@ -103,10 +103,6 @@ There are a few run modes that might fit different use cases:
 ;; High initial GC threshold for speeding up Emacs load.
 (setq gc-cons-threshold 1000000000)
 
-;; Setup fringes
-(when window-system
-  (set-fringe-mode '(8 . 0)))
-
 ;; Enable delete selection mode by default. I hate the default
 ;; behaviour.
 (delete-selection-mode 1)
@@ -125,17 +121,6 @@ There are a few run modes that might fit different use cases:
 
 ;; Prevent showing warning about cl package deprecated.
 (setq byte-compile-warnings '(cl-functions))
-
-;; Set default fonts
-(when window-system
-(add-to-list 'default-frame-alist
-             '(font . "Hack-11")))
-
-;; Specific terminal configs
-(unless window-system
-  (xterm-mouse-mode t)
-  (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 2)))
-  (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 2))))
 
 ;; Required by lsp-mode for increasing performance.
 (setq read-process-output-max (* 10 (* 1024 1024)))
@@ -190,13 +175,22 @@ There are a few run modes that might fit different use cases:
 
   (setq use-package-verbose t))
 
+(add-to-list 'load-path (conf-rel-path "config/"))
+(add-to-list 'load-path (conf-rel-path "config/winsys/"))
+(if window-system
+    (progn
+      (require 'winsys-graphic)
+      (emacs-setup-winsys-graphic))
+    (progn
+      (require 'winsys-none)
+      (emacs-setup-winsys-none)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Themes, decorators and visuals ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Add configuration scripts from the config/ folder
-(add-to-list 'load-path (conf-rel-path "config/"))
+
 
 ;; ;; Ensures that all-the-icons is installed.
 (require 'config-all-the-icons)
@@ -211,40 +205,12 @@ There are a few run modes that might fit different use cases:
   (require 'config-theme))
 
 (require 'config-prettify-symbols)
-
-(when (and window-system (feature-enabled-p 'git))
-  (use-package git-gutter-fringe
-    :ensure t
-    :config
-    (global-set-key (kbd "C-x v n") 'git-gutter:next-hunk)
-    (global-set-key (kbd "C-x v p") 'git-gutter:previous-hunk)
-    (global-set-key (kbd "C-x v /") 'git-gutter:revert-hunk)
-    (global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
-
-    (set-face-foreground 'git-gutter-fr:modified "#da8548")
-    (set-face-foreground 'git-gutter-fr:added    "#00ff00")
-    (set-face-foreground 'git-gutter-fr:deleted  "#ff0000")
-
-    (let ((fringe
-	   (eval-when-compile
-	     (fringe-helper-convert
-	      "..XXXX.."
-	      "..XXXX.."
-	      "..XXXX.."
-	      "..XXXX.."
-	      "..XXXX.."
-	      "..XXXX.."
-	      "..XXXX.."
-	      "..XXXX.."))))
-
-      (define-fringe-bitmap 'git-gutter-fr:added fringe nil nil '(top repeat))
-      (define-fringe-bitmap 'git-gutter-fr:deleted fringe nil nil '(top repeat))
-      (define-fringe-bitmap 'git-gutter-fr:modified fringe nil nil '(top repeat)))
-    (global-git-gutter-mode +1)))
+(require 'config-git-gutter)
 
 (require 'active-minibuffer-lock-mode)
 (require 'open-in-emacs-mode)
 
+(require 'avoc-margins)
 (require 'util)
 
 ;; Kawaii rainbow delimiters
