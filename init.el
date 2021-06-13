@@ -2,25 +2,22 @@
 ;;; Commentary:
 ;;; Code:
 
-(defun conf-rel-path (path)
-  (concat user-emacs-directory path))
-
-(add-to-list 'load-path (conf-rel-path "config/"))
-(add-to-list 'load-path (conf-rel-path "config/winsys/"))
-
-(require 'avoc-run-mode)
-(require 'avoc-basics)
-
-(defmacro emacs-27 ()
-  `(eq (symbol-value 'emacs-major-version) 27))
-
-(defmacro emacs-28 ()
-  `(eq (symbol-value 'emacs-major-version) 28))
-
 ;; High initial GC threshold for speeding up Emacs load.
 (setq gc-cons-threshold 1000000000)
 
+(defun avoc-init-conf-rel-path (path)
+  (concat user-emacs-directory path))
 
+(defmacro avoc-init-add-to-config-load-path (folder)
+  `(add-to-list 'load-path (avoc-init-conf-rel-path ,folder)))
+
+;; Setup load paths.
+(avoc-init-add-to-config-load-path "config/")
+(avoc-init-add-to-config-load-path "config/winsys/")
+
+(require 'avoc-util)
+(require 'avoc-run-mode)
+(require 'avoc-basics)
 
 ;; Init repositories
 (require 'package)
@@ -82,7 +79,6 @@
 (require 'open-in-emacs-mode)
 
 (require 'avoc-margins)
-(require 'util)
 
 ;; Kawaii rainbow delimiters
 (use-package rainbow-delimiters
@@ -159,7 +155,7 @@
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
 
-(add-to-list 'load-path (conf-rel-path "buffer-move/"))
+(add-to-list 'load-path (avoc-init-conf-rel-path "buffer-move/"))
 (use-package buffer-move
   :ensure nil
   :bind
@@ -195,9 +191,9 @@
   (open-in-emacs-mode 1))
 
 ;; Highlight the minibuffer on enable
-(add-hook 'minibuffer-setup-hook #'minibuffer-emph)
+(add-hook 'minibuffer-setup-hook #'avoc-util-minibuffer-emph)
 
-(when (emacs-28)
+(when (avoc-util-check-emacs-28)
   ;; TODO Change tab-line-tabs-function to filter special buffers
   ;; (like helm, messages...) ?
   (add-hook 'change-major-mode-hook (lambda () (global-tab-line-mode 1))))
@@ -210,7 +206,7 @@
 ;; submodule that points to a custom elcord mode without reconnect
 ;; messages repeating each 15 seconds.
 (when (avoc-run-mode-feature-enabled-p 'elcord)
-  (add-to-list 'load-path (conf-rel-path "elcord/"))
+  (add-to-list 'load-path (avoc-init-conf-rel-path "elcord/"))
   (require 'elcord)
   (setq elcord-silent-mode 1)
   (elcord-mode))
@@ -587,7 +583,7 @@
 ;; Work configuration ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
-(let* ((amzn-config-folder (conf-rel-path "amzn"))
+(let* ((amzn-config-folder (avoc-init-conf-rel-path "amzn"))
        (amzn-entry-point (concat amzn-config-folder "/init.el")))
 
   (when (file-exists-p amzn-entry-point)

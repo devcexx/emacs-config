@@ -7,6 +7,7 @@
 ;;; Code:
 
 ;; Disable lock file creation.
+(require 'avoc-util)
 (require 'avoc-run-mode)
 (setq create-lockfiles nil)
 
@@ -36,7 +37,7 @@
 (cond ((string-equal system-type "darwin")
        (setq mac-right-option-modifier nil)))
 
-(setq custom-file (conf-rel-path "custom.el"))
+(setq custom-file (avoc-init-conf-rel-path "custom.el"))
 (load custom-file 'noerror)
 
 ;; Enable desktop save mode
@@ -49,9 +50,9 @@
 
 ;; Move temporal files to Emacs folder
 (setq backup-directory-alist
-      `((".*" . , (conf-rel-path "temp"))))
+      `((".*" . , (avoc-init-conf-rel-path "temp"))))
 (setq auto-save-file-name-transforms
-      `((".*" , (conf-rel-path "temp") t)))
+      `((".*" , (avoc-init-conf-rel-path "temp") t)))
 
 (provide 'avoc-basics)
 ;;; avoc-basics.el ends here

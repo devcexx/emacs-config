@@ -1,12 +1,12 @@
-(require 'util)
+(require 'avoc-util)
 
 (defun ensure--minibuffer-selected-if-active (&rest _)
   "Ensure that, if there's an active minibuffer, then it is selected, and select it and visually notify the user otherwise."
   (let ((minibuf (active-minibuffer-window)) (cwindow (selected-window)))
     (when (and minibuf (not (eq minibuf cwindow)))
       (select-window minibuf)
-      (minibuffer-emph)
-      (beep-emph)
+      (avoc-util-minibuffer-emph)
+      (avoc-util-beep-emph)
       )))
 
 (define-minor-mode active-minibuffer-lock-mode
