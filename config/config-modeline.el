@@ -2,13 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
-(when (feature-enabled-p 'modeline)
+(when (avoc-run-mode-feature-enabled-p 'modeline)
   (use-package doom-modeline
     :ensure t
     :after all-the-icons
     :config (doom-modeline-mode 1))
 
-  (when (feature-enabled-p 'nyancat)
+  (when (avoc-run-mode-feature-enabled-p 'nyancat)
     (use-package nyan-mode ;; Essential
       :ensure t
       :after doom-modeline

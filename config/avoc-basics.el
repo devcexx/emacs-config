@@ -7,6 +7,7 @@
 ;;; Code:
 
 ;; Disable lock file creation.
+(require 'avoc-run-mode)
 (setq create-lockfiles nil)
 
 ;; Enable delete selection mode by default. I hate the default
@@ -39,7 +40,7 @@
 (load custom-file 'noerror)
 
 ;; Enable desktop save mode
-(when (feature-enabled-p 'desktop-save-mode)
+(when (avoc-run-mode-feature-enabled-p 'desktop-save-mode)
   (desktop-save-mode 1))
 
 ;; Attempt to fix a bug that produces sometimes the desktop-save-mode

@@ -2,96 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Definition of Emacs run modes and features ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defconst emacs-run-mode 'default
-  "Define the way Emacs was configured for the current instance.
-The run mode affects to the way some packages or features might be loaded
-or not in the init file.
-There are a few run modes that might fit different use cases:
-  - :default: Runs Emacs fully featured, for using it as a
-    single-instance main editor.
-  - :spot: Runs Emacs with most of the features, but accomodates it
-    for using as a secondary editor instance, for using it for editing
-    simple and very specific files.
-  - :light: Runs Emacs disabling most of its features, keeping
-    only basic features like some programming modes, suitable for
-    running Emacs on a remote server.")
-
-(defconst run-modes-features
-  '(
-    (default .
-      (package-refresh
-       position-beacon
-       desktop-save-mode
-       open-in-emacs
-       linum
-       theme
-       nyancat
-       modeline
-       treemacs
-       treemacs-autoshow
-       fill-column-indicator
-       flycheck
-       company
-       helm
-       git
-       projectile
-       elcord
-       lsp
-       lsp-ui
-       undo-tree))
-
-    (spot .
-      (package-refresh
-       position-beacon
-       linum
-       theme
-       nyancat
-       modeline
-       treemacs
-       projectile
-       lsp
-       lsp-ui
-       undo-tree))
-
-    (light . (linum undo-tree company flycheck helm))))
-
-(defmacro features-enabled-list ()
-  "Return the list of features currently enabled by the run mode."
-  `(alist-get emacs-run-mode run-modes-features))
-
-(defun feature-enabled-p (feature)
-  "Return whether the given FEATURE is currently enabled on the current run mode."
-  (member feature (features-enabled-list)))
-
-(defun features-enabled-p (features)
-  "Return whether the given set of FEATURES is currently enabled on the current run mode."
-   (let ((feature-list (features-enabled-list)))
-     (seq-every-p (lambda (feature) (member feature feature-list)) features)))
-
-(let* ((env-name "EMACS_RUN_MODE")
-       (env-value (getenv env-name))
-       (mode (pcase env-value
-	       (`nil 'default)
-	       ("default" 'default)
-	       ("spot" 'spot)
-	       ("light" 'light))))
-
-  (unless mode
-    (error "Invalid run mode specified in %s: '%s'" env-name env-value))
-
-  (setq emacs-run-mode mode))
-
-(message "Run mode selected: %S" emacs-run-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Basic configurations ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun conf-rel-path (path)
   (concat user-emacs-directory path))
+
+(add-to-list 'load-path (conf-rel-path "config/"))
+(add-to-list 'load-path (conf-rel-path "config/winsys/"))
+
+(require 'avoc-run-mode)
+(require 'avoc-basics)
 
 (defmacro emacs-27 ()
   `(eq (symbol-value 'emacs-major-version) 27))
@@ -102,16 +20,13 @@ There are a few run modes that might fit different use cases:
 ;; High initial GC threshold for speeding up Emacs load.
 (setq gc-cons-threshold 1000000000)
 
-(add-to-list 'load-path (conf-rel-path "config/"))
-(add-to-list 'load-path (conf-rel-path "config/winsys/"))
 
-(require 'avoc-basics)
 
 ;; Init repositories
 (require 'package)
 (package-initialize)
 
-(when (feature-enabled-p 'package-refresh)
+(when (avoc-run-mode-feature-enabled-p 'package-refresh)
   (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			   ("melpa" . "https://melpa.org/packages/")))
 
@@ -154,10 +69,10 @@ There are a few run modes that might fit different use cases:
 (require 'config-linum-relative)
 (require 'text-utils)
 
-(when (feature-enabled-p 'flycheck)
+(when (avoc-run-mode-feature-enabled-p 'flycheck)
   (require 'config-flycheck))
 
-(when (feature-enabled-p 'theme)
+(when (avoc-run-mode-feature-enabled-p 'theme)
   (require 'config-theme))
 
 (require 'config-prettify-symbols)
@@ -184,7 +99,7 @@ There are a few run modes that might fit different use cases:
   :commands linum-relative-mode)
 
 ;; Fill column indicator
-(when (feature-enabled-p 'fill-column-indicator)
+(when (avoc-run-mode-feature-enabled-p 'fill-column-indicator)
   (use-package fill-column-indicator
     :ensure t
     :config
@@ -195,7 +110,7 @@ There are a few run modes that might fit different use cases:
 
 ;; Cursor highlight
 ;; Only enabled when Emacs is running on a graphical interface
-(when (feature-enabled-p 'position-beacon)
+(when (avoc-run-mode-feature-enabled-p 'position-beacon)
   (use-package beacon
     :ensure t
     :config
@@ -210,7 +125,7 @@ There are a few run modes that might fit different use cases:
   :commands browse-kill-ring
   :ensure t)
 
-(when (feature-enabled-p 'treemacs)
+(when (avoc-run-mode-feature-enabled-p 'treemacs)
   (use-package treemacs
     :ensure t
     :demand t
@@ -222,7 +137,7 @@ There are a few run modes that might fit different use cases:
     ;; project to show. Otherwise, Treemacs will interactively ask
     ;; user to add a new one, which is horrible to have it during
     ;; Emacs initialization.
-    (when (and (feature-enabled-p 'treemacs-autoshow) (not (treemacs-workspace->is-empty?)))
+    (when (and (avoc-run-mode-feature-enabled-p 'treemacs-autoshow) (not (treemacs-workspace->is-empty?)))
       (add-hook 'window-setup-hook
 		(lambda ()
 		  (let ((last-window (selected-window)))
@@ -234,7 +149,7 @@ There are a few run modes that might fit different use cases:
     ([f8] . treemacs)
     ("C-c t l" . treemacs-find-file))
 
-  (when (feature-enabled-p 'projectile)
+  (when (avoc-run-mode-feature-enabled-p 'projectile)
     (use-package treemacs-projectile
       :ensure t
       :after treemacs projectile
@@ -256,7 +171,7 @@ There are a few run modes that might fit different use cases:
 (require 'config-prettify-symbols)
 
 ;; Enable line numbers
-(when (feature-enabled-p 'linum)
+(when (avoc-run-mode-feature-enabled-p 'linum)
   (dolist (hook '(prog-mode-hook text-mode-hook))
     (add-hook hook #'linum-mode 1))
 
@@ -276,7 +191,7 @@ There are a few run modes that might fit different use cases:
 (active-minibuffer-lock-mode 1)
 
 ;; Enable Open In Emacs mode
-(when (and (open-in-emacs-available) (feature-enabled-p 'open-in-emacs))
+(when (and (open-in-emacs-available) (avoc-run-mode-feature-enabled-p 'open-in-emacs))
   (open-in-emacs-mode 1))
 
 ;; Highlight the minibuffer on enable
@@ -294,7 +209,7 @@ There are a few run modes that might fit different use cases:
 ;; Elcord: support for Discord. The elcord folder contains a git
 ;; submodule that points to a custom elcord mode without reconnect
 ;; messages repeating each 15 seconds.
-(when (feature-enabled-p 'elcord)
+(when (avoc-run-mode-feature-enabled-p 'elcord)
   (add-to-list 'load-path (conf-rel-path "elcord/"))
   (require 'elcord)
   (setq elcord-silent-mode 1)
@@ -315,7 +230,7 @@ There are a few run modes that might fit different use cases:
   (prog-mode . show-smartparens-mode)
   (prog-mode . smartparens-mode))
 
-(when (feature-enabled-p 'undo-tree)
+(when (avoc-run-mode-feature-enabled-p 'undo-tree)
   (use-package undo-tree
     :ensure t
     :init (global-undo-tree-mode)))
@@ -325,7 +240,7 @@ There are a few run modes that might fit different use cases:
   :init (which-key-mode 1))
 
 ;; LSP Mode
-(when (feature-enabled-p 'lsp)
+(when (avoc-run-mode-feature-enabled-p 'lsp)
   (use-package lsp-mode
     :ensure t
     :commands lsp
@@ -351,7 +266,7 @@ There are a few run modes that might fit different use cases:
     (setq lsp-completion-use-last-result t))
 
 
-  (when (feature-enabled-p 'treemacs)
+  (when (avoc-run-mode-feature-enabled-p 'treemacs)
     (use-package lsp-treemacs
       :ensure t
       :config
@@ -362,7 +277,7 @@ There are a few run modes that might fit different use cases:
       ("C-c t t" . lsp-treemacs-type-hierarchy)
       ("C-c t e" . lsp-treemacs-errors-list)))
 
-  (when (feature-enabled-p 'lsp-ui)
+  (when (avoc-run-mode-feature-enabled-p 'lsp-ui)
     (use-package lsp-ui
       :ensure t
       :commands lsp-ui-mode
@@ -397,14 +312,14 @@ There are a few run modes that might fit different use cases:
   :hook (after-init . exec-path-from-shell-initialize))
 
 ;; Projectile: project management for Emacs
-(when (feature-enabled-p 'projectile)
+(when (avoc-run-mode-feature-enabled-p 'projectile)
   (use-package projectile
     :ensure t
     :config
     (projectile-mode)
     (setq projectile-enable-caching t))
 
-  (when (feature-enabled-p 'helm)
+  (when (avoc-run-mode-feature-enabled-p 'helm)
     (use-package helm-projectile
       :ensure t
       :after ((projectile))
@@ -412,7 +327,7 @@ There are a few run modes that might fit different use cases:
              ("C-x p P" . helm-projectile-switch-project)))))
 
 ;; Helm: enhaced completion window.
-(when (feature-enabled-p 'helm)
+(when (avoc-run-mode-feature-enabled-p 'helm)
   (use-package helm
     :ensure t
     :bind (("M-x" . helm-M-x)
@@ -434,7 +349,7 @@ There are a few run modes that might fit different use cases:
   :bind ("C-x t" . multi-term-dedicated-open))
 
 ;; company: autocompletion.
-(when (feature-enabled-p 'company)
+(when (avoc-run-mode-feature-enabled-p 'company)
   (use-package company
     :ensure t
     :defer t
@@ -452,7 +367,7 @@ There are a few run modes that might fit different use cases:
     ("C-c C-SPC" . company-complete)))
 
 ;; Magit: Git client
-(when (feature-enabled-p 'git)
+(when (avoc-run-mode-feature-enabled-p 'git)
   (use-package magit
     :ensure t
     :bind (("C-x v v" . magit-status)

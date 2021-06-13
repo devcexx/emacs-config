@@ -114,7 +114,7 @@ mode."
  (lambda (width) ()))
 
 ;; Do the same with flycheck
-(when (feature-enabled-p 'flycheck)
+(when (avoc-run-mode-feature-enabled-p 'flycheck)
   (advice-add
    'flycheck-refresh-fringes-and-margins
    :override
