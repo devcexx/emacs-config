@@ -26,7 +26,7 @@
 
 (require 'avoc-all-the-icons)
 (require 'avoc-modeline)
-(require 'config-linum-relative)
+(require 'avoc-linum-relative)
 (require 'text-utils)
 
 (when (avoc-run-mode-feature-enabled-p 'flycheck)
@@ -52,10 +52,6 @@
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
 (setq mouse-wheel-progressive-speed t)
 (setq scroll-step 2)
-
-(use-package linum-relative
-  :ensure t
-  :commands linum-relative-mode)
 
 ;; Fill column indicator
 (when (avoc-run-mode-feature-enabled-p 'fill-column-indicator)
@@ -513,8 +509,6 @@
 ;; Navigation keybindings
 (global-set-key (kbd "C-,") 'previous-buffer)
 (global-set-key (kbd "C-.") 'next-buffer)
-
-(global-set-key (kbd "<f6>") 'linum-relative-transient)
 
 ;; Debug keybindings
 (global-set-key (kbd "C-x & ,") (lambda () (interactive) (profiler-start 'cpu+mem)))
