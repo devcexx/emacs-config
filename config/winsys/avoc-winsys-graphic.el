@@ -1,8 +1,13 @@
-(defun avoc--setup-winsys ()
-  "Enables specific Emacs configuration when running on a graphical interface (any of them)."
+;;; avoc-winsys-graphic.el --- Specific configuration for graphical displays.
 
-  ;; Set default fonts
-  (add-to-list 'default-frame-alist
-	       '(font . "Hack-11")))
+;;; Commentary:
+;;; This file specifies global configuration for correctly displaying
+;;; Emacs when running in a graphical display.
+
+;;; Code:
+
+;; Set default fonts
+(add-to-list 'default-frame-alist
+	     '(font . "Hack-11"))
 
 (provide 'avoc-winsys-graphic)

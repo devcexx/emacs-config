@@ -23,7 +23,6 @@
 (if window-system
     (require 'avoc-winsys-graphic)
   (require 'avoc-winsys-none))
-(avoc--setup-winsys)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Themes, decorators and visuals ;;
