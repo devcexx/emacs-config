@@ -1,5 +1,8 @@
-;;; config-modeline.el --- Modeline configuration
+;;; avoc-modeline.el --- Modeline configuration.
+
 ;;; Commentary:
+;;; This file configures the Emacs modeline.
+
 ;;; Code:
 
 (when (avoc-run-mode-feature-enabled-p 'modeline)
@@ -20,5 +23,5 @@
     :ensure t
     :after doom-modeline))
 
-(provide 'config-modeline)
-;;; config-modeline.el ends here
+(provide 'avoc-modeline)
+;;; avoc-modeline.el ends here

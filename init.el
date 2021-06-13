@@ -25,7 +25,7 @@
   (require 'avoc-winsys-none))
 
 (require 'avoc-all-the-icons)
-(require 'config-modeline)
+(require 'avoc-modeline)
 (require 'config-linum-relative)
 (require 'text-utils)
 
