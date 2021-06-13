@@ -1,4 +1,4 @@
-(defun emacs-setup-winsys-none ()
+(defun avoc--setup-winsys ()
   "Enables specific Emacs configuration when running on a terminal."
 
   (setq-default left-margin-width 2)

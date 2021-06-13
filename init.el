@@ -178,12 +178,9 @@ There are a few run modes that might fit different use cases:
 (add-to-list 'load-path (conf-rel-path "config/"))
 (add-to-list 'load-path (conf-rel-path "config/winsys/"))
 (if window-system
-    (progn
-      (require 'winsys-graphic)
-      (emacs-setup-winsys-graphic))
-    (progn
-      (require 'winsys-none)
-      (emacs-setup-winsys-none)))
+    (require 'avoc-winsys-graphic)
+  (require 'avoc-winsys-none))
+(avoc--setup-winsys)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Themes, decorators and visuals ;;
