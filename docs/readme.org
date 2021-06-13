@@ -1,34 +1,42 @@
-* About
+* Emacs Avocado
 
-This is my Emacs configuration file. I've started a long time ago and
-I still making it changes from time to time. There are some things
-that work well, and others that don't even work (sorry :P). But, the
-main idea of this file is to have a working, configured Emacs by just
-cloning the repository and let the =init.el= do its work. No extra
-configuration or package download is required to make it work (or, at
-least, that's the objective).
+  This is my Emacs configuration file. I've started a long time ago and
+  I still making it changes from time to time. There are some things
+  that work well, and others that don't even work (sorry :P). But, the
+  main idea of this file is to have a working, configured Emacs by just
+  cloning the repository and let the =init.el= do its work. No extra
+  configuration or package download is required to make it work (or, at
+  least, that's the objective).
+
+** Why is it called Avocado?
+
+   Because I was needing a name so I can use it for naming
+   configuration files and symbols under the same prefix. And of
+   course, the first candidate for that was Avocado (a.k.a =avoc= for
+   shorten) because, well, it's awesome, like this config.
 
 ** Table of Contents :TOC_2_gh:
-- [[#about][About]]
+- [[#emacs-avocado][Emacs Avocado]]
+  - [[#why-is-it-called-avocado][Why is it called Avocado?]]
 - [[#installing][Installing]]
   - [[#are-you-on-windows][Are you on Windows?]]
   - [[#macos-support][macOS support]]
 
 * Installing
 
-Just clone the repository and its submodules into the .emacs.d config
-folder. Make sure that this folder does not previously exist or it's
-empty:
+  Just clone the repository and its submodules into the .emacs.d config
+  folder. Make sure that this folder does not previously exist or it's
+  empty:
 
-: git clone --recursive https://github.com/devcexx/emacs-config ~/.emacs.d
+  : git clone --recursive https://github.com/devcexx/emacs-config ~/.emacs.d
 
 ** Are you on Windows?
 
-Well, that's your problem dude.
+   Well, that's your problem dude.
 
 ** macOS support
 
-I'm not a common user of macOS, but I did. This means that I'm not
-testing whether the new updates works on macOS or not. Nevertheless,
-there's a line on the [../init.el#L13](init.el) file so the macOS users
-can use the left alt key as the meta key on Emacs.
+   I'm not a common user of macOS, but I did. This means that I'm not
+   testing whether the new updates works on macOS or not. Nevertheless,
+   there's a line on the [../init.el#L13](init.el) file so the macOS users
+   can use the left alt key as the meta key on Emacs.
