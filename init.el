@@ -24,15 +24,7 @@
     (require 'avoc-winsys-graphic)
   (require 'avoc-winsys-none))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Themes, decorators and visuals ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Add configuration scripts from the config/ folder
-
-
-;; ;; Ensures that all-the-icons is installed.
-(require 'config-all-the-icons)
+(require 'avoc-all-the-icons)
 (require 'config-modeline)
 (require 'config-linum-relative)
 (require 'text-utils)

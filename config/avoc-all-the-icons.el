@@ -1,8 +1,12 @@
-;;; config-all-the-icons.el --- Automatically install all-the-icons package
+;;; avoc-all-the-icons.el --- All the icons setup.
+
 ;;; Commentary:
+;;; Configures all-the-icons pacakge, by automatically installing
+;;; all-the-icons fonts if required.
+
 ;;; Code:
 
-(defun all-the-icons-fonts-install-if-not-present ()
+(defun avoc-all-the-icons--install-if-not-present ()
   "Check whether the all the icons fonts are installed on the filesystem, and install it otherwise."
 
   (let* ((font-dest (cl-case window-system
@@ -23,8 +27,7 @@
 (when window-system
   (use-package all-the-icons
     :ensure t
-    :config (all-the-icons-fonts-install-if-not-present)))
+    :config (avoc-all-the-icons--install-if-not-present)))
 
-(provide 'all-the-icons-fonts-install-if-not-present)
-(provide 'config-all-the-icons)
-;;; config-all-the-icons.el ends here
+(provide 'avoc-all-the-icons)
+;;; avoc-all-the-icons.el ends here
