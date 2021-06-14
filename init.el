@@ -27,7 +27,7 @@
 (require 'avoc-all-the-icons)
 (require 'avoc-modeline)
 (require 'avoc-linum-relative)
-(require 'text-utils)
+(require 'avoc-text-utils)
 
 (when (avoc-run-mode-feature-enabled-p 'flycheck)
   (require 'config-flycheck))
@@ -476,21 +476,9 @@
 ;; Pretty much for the same, but projectile-aware.
 (global-set-key (kbd "C-x p M-k") 'projectile-kill-non-project-buffers)
 
-;; I don't like commands like kill-word, kill-line to fill the kill
-;; ring buffer by default.  Here, I'm pointing its default keybindings
-;; to versions of these functions that doesn't save the killed region
-;; into the buffer, but just deleting instead. The original kill-word
-;; and kill-line functions will be available through alternate
-;; keybindings.
-(global-set-key (kbd "C-k") 'delete-current-line)
-(global-set-key (kbd "C-<backspace>") 'backward-delete-word)
-(global-set-key (kbd "C-<delete>") 'delete-word)
-
 (global-set-key (kbd "M-k") 'kill-line)
 (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 (global-set-key (kbd "M-<delete>") 'kill-word)
-
-(global-set-key (kbd "C-c n") 'duplicate-line)
 
 ;; Shortcut to artist mode.
 (global-set-key (kbd "C-c C-a") 'artist-mode)
