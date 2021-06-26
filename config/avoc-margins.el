@@ -50,6 +50,9 @@ LEFT-MARGIN RIGHT-FRINGE and RIGHT-MARGIN accordingly."
     (set-window-margins curwin left-margin right-margin)
     (set-window-fringes curwin left-fringe right-fringe)))
 
+(defvar avoc-margins--linum-update-in-progress nil
+  "Equal to t if the function linum-update-window is currently being executed.")
+
 (defvar-local avoc-margins--last-margins nil
   "The last margins calculated for the current buffer and stored for preventing extra calculations.")
 
@@ -122,25 +125,55 @@ mode."
      (when flycheck-current-errors
        (apply 'flycheck-buffer)))))
 
-;; Intercept linum mode updates
+;; For fixing linum-mode margin issues I currently using a quite
+;; intrusive methods based on a few advices. Probably is not de most
+;; ideal solution, but who cares is my Emacs config.
+
+;; Intercept calls to window-margins when linum is being updated. In
+;; that case, fake the current margins of the window to force linum to
+;; always call set-window-margins and
+(advice-add
+ 'window-margins
+ :around
+ (lambda (original-fun &optional win)
+   (if avoc-margins--linum-update-in-progress
+       (progn
+       (cons 0 0))
+     (apply original-fun (list win)))))
+
+;; Intercept any attempt from linum-mode to change the margins, and
+;; add the specific margins for the current buffer.
+(advice-add
+ 'set-window-margins
+ :around
+ (lambda (original-fun win mleft mright)
+   (if avoc-margins--linum-update-in-progress
+       ;; linum-update-window in progress
+       (let*  (
+	       (last-margins (with-current-buffer (window-buffer win) (avoc-margins--last-margins)))
+	       (last-left (nth 1 last-margins))
+	       (last-right (nth 3 last-margins))
+	       (new-left (+ (or mleft 0) last-left))
+	       (new-right (+ (or mright 0) last-right)))
+	 (apply original-fun (list win new-left new-right)))
+
+     ;; otherwise
+     (apply original-fun (list win mleft mright))
+     )
+   )
+ )
+
+;; Intercept linum mode updates and mark that currently linum is being
+;; updated.
 (advice-add
  'linum-update-window
  :around
  (lambda (oldfun win)
-   (set-window-margins win 0 0) ;; Prevent margins for interferring in linum calculations.
-   (apply oldfun (list win))
-   
-   ;; Restore margins, and add the current ones from the user.
-   (let* (
-	  (wmargins (window-margins win))
-	  (wleft (or (car wmargins) 0))
-	  (wright (or (cdr wmargins) 0))
-	  (last-margins (with-current-buffer (window-buffer win) (avoc-margins--last-margins)))
-	  (last-left (nth 1 last-margins))
-	  (last-right (nth 3 last-margins))
-	  (new-left (+ wleft last-left))
-	  (new-right (+ wright last-right)))
-     (set-window-margins win new-left new-right))))
+   (setq avoc-margins--linum-update-in-progress t)
+   (unwind-protect
+       (apply oldfun (list win))
+     (setq avoc-margins--linum-update-in-progress nil))
+ ))
 
 ;; Reprioritize some overlays to keep linum at the left of the margin,
 ;; followed by the git-gutter. Flycheck overlays are kept on the
