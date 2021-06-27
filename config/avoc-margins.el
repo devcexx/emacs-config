@@ -25,7 +25,7 @@ present modes in the table are activated or deactivated.")
     (treemacs-mode . (8 0 0 0))
     (prog-mode . (0 0 0 0))
     (text-mode . (0 0 0 0))
-    (minibuffer-inactive-mode . (8 0 0 0))
+    (minibuffer-inactive-mode . (0 0 0 0))
     (magit-status-mode  . (8 0 0 0))
     (magit-diff-mode  . (8 0 0 0)))
   "Relationship between each major mode and its base margins.
