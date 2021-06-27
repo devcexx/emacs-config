@@ -29,7 +29,7 @@ With argument ARG, do this that many times."
   "Delete characters backward until encountering the beginning of a word.
 With argument ARG, do this that many times."
   (interactive "p")
-  (delete-word (- arg)))
+  (avoc-text-utils-delete-word (- arg)))
 
 (defun avoc-text-utils-center-rectangle (beg end)
   (interactive "*r")
