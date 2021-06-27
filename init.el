@@ -19,6 +19,7 @@
 (require 'avoc-run-mode)
 (require 'avoc-basics)
 (require 'avoc-packaging)
+(require 'avoc-terminal-clip)
 
 (if window-system
     (require 'avoc-winsys-graphic)

@@ -4,3 +4,6 @@
 [submodule "buffer-move"]
 	path = buffer-move
 	url = https://github.com/lukhas/buffer-move
+[submodule "terminal-clip.el"]
+	path = terminal-clip.el
+	url = https://github.com/devcexx/terminal-clip.el
