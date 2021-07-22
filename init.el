@@ -209,7 +209,7 @@
     (setq lsp-keymap-prefix "C-c")
     (setq lsp-lens-auto-enable t)
     (setq lsp-headerline-breadcrumb-enable t)
-    (setq lsp-signature-auto-activate t)
+    (setq lsp-signature-auto-activate '(:on-trigger-char :on-server-request))
     (setq lsp-signature-render-documentation nil)
 
     (setq lsp-rust-analyzer-display-chaining-hints t)
