@@ -82,7 +82,7 @@ This function returns the effective margins that a buffer must have
 based on the minor modes it has activated and its current major
 mode."
   (let* ((filtered-table
-	 (seq-filter (lambda (entry) (symbol-value (car entry))) avoc-margins--minor-modes-table))
+	 (seq-filter (lambda (entry) (and (boundp (car entry)) (symbol-value (car entry)))) avoc-margins--minor-modes-table))
 	 (config-values-only (mapcar #'cdr filtered-table)))
     (seq-reduce (lambda (l r) (cl-mapcar #'+ l r)) config-values-only (avoc-margins--base-margins-for-current-major-mode))))
 
