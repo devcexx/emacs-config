@@ -199,7 +199,7 @@
 (when (avoc-run-mode-feature-enabled-p 'lsp)
   (use-package lsp-mode
     :ensure t
-    :commands lsp
+    :commands (lsp lsp-deferred)
     :hook
     (lsp-mode . lsp-signature-activate)
     (lsp-mode . lsp-ui-mode)
@@ -374,7 +374,7 @@
 (use-package auctex
   :ensure t
   :mode ("\\.tex\\'" . latex-mode)
-  :hook (latex-mode . lsp))
+  :hook (latex-mode . lsp-deferred))
 
 ;; js2-mode: Javascript integration
 (use-package js2-mode
@@ -390,12 +390,12 @@
   :ensure t
   :mode ("\\.ts\\'" . typescript-mode)
   :hook
-  (typescript-mode . lsp))
+  (typescript-mode . lsp-deferred))
 
 (use-package web-mode
   :ensure t
   :mode ("\\.tsx\\'" . web-mode)
-  :hook (web-mode . lsp))
+  :hook (web-mode . lsp-deferred))
 
 ;; Rust integration
 (use-package toml-mode
@@ -405,7 +405,9 @@
 (use-package rustic
   :ensure t
   :mode ("\\.rs\\'" . rustic-mode)
-  :hook (rustic-mode . lsp)
+  :init
+  (setq rustic-lsp-setup-p nil)
+  :hook (rustic-mode . lsp-deferred)
   :bind (("C-c C-c f" . rustic-format-file)))
 
 (defun kill-buffers()
