@@ -526,6 +526,9 @@
 (add-hook 'prog-mode-hook
 	  (lambda () (setq truncate-lines t)))
 
+(add-hook 'before-save-hook
+          (lambda () (when (derived-mode-p 'prog-mode)
+               (delete-trailing-whitespace))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Work configuration ;;
