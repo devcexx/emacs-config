@@ -4,6 +4,9 @@
 (defmacro avoc-util-check-emacs-28 ()
   `(eq (symbol-value 'emacs-major-version) 28))
 
+(defmacro avoc-util-check-emacs-29 ()
+  `(eq (symbol-value 'emacs-major-version) 29))
+
 (defun avoc-util-beep-emph ()
   "Play a beep multiple times repeatedly for better emphasizing a situation that requires immediate attention."
   (when (not visible-bell)

@@ -30,9 +30,6 @@
 (require 'avoc-linum-relative)
 (require 'avoc-text-utils)
 
-(when (avoc-run-mode-feature-enabled-p 'flycheck)
-  (require 'config-flycheck))
-
 (when (avoc-run-mode-feature-enabled-p 'theme)
   (require 'config-theme))
 
@@ -189,77 +186,82 @@
 (when (avoc-run-mode-feature-enabled-p 'undo-tree)
   (use-package undo-tree
     :ensure t
+    :config
+    ;; Prevent undo tree files from polluting your git repo
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
     :init (global-undo-tree-mode)))
 
 (use-package which-key
   :ensure t
   :init (which-key-mode 1))
 
+(require 'avoc-prog)
+
 ;; LSP Mode
-(when (avoc-run-mode-feature-enabled-p 'lsp)
-  (use-package lsp-mode
-    :ensure t
-    :commands (lsp lsp-deferred)
-    :hook
-    (lsp-mode . lsp-signature-activate)
-    (lsp-mode . lsp-ui-mode)
-    :config
-    (require 'lsp-lens)
-    :init
-    (setq lsp-keymap-prefix "C-c")
-    (setq lsp-lens-auto-enable t)
-    (setq lsp-headerline-breadcrumb-enable t)
-    (setq lsp-signature-auto-activate '(:on-trigger-char :on-server-request))
-    (setq lsp-signature-render-documentation nil)
+;; (when (avoc-run-mode-feature-enabled-p 'lsp)
+;;   (use-package lsp-mode
+;;     :ensure t
+;;     :commands (lsp lsp-deferred)
+;;     :hook
+;;     (lsp-mode . lsp-signature-activate)
+;;     (lsp-mode . lsp-ui-mode)
+;;     :config
+;;     (require 'lsp-lens)
+;;     :init
+;;     (setq lsp-keymap-prefix "C-c")
+;;     (setq lsp-lens-auto-enable t)
+;;     (setq lsp-headerline-breadcrumb-enable t)
+;;     (setq lsp-signature-auto-activate '(:on-trigger-char :on-server-request))
+;;     (setq lsp-signature-render-documentation nil)
 
-    (setq lsp-rust-analyzer-display-chaining-hints t)
-    (setq lsp-rust-analyzer-display-parameter-hints t)
-    (setq lsp-rust-analyzer-server-display-inlay-hints t)
-    (setq lsp-rust-analyzer-inlay-hints-mode t)
-    (setq lsp-rust-analyzer-cargo-load-out-dirs-from-check t)
-    (setq lsp-rust-analyzer-proc-macro-enable t)
-    (setq lsp-rust-all-features t)
-    (setq lsp-completion-use-last-result t))
+;;     (setq lsp-rust-analyzer-display-chaining-hints t)
+;;     (setq lsp-rust-analyzer-display-parameter-hints t)
+;;     (setq lsp-rust-analyzer-server-display-inlay-hints t)
+;;     (setq lsp-rust-analyzer-inlay-hints-mode t)
+;;     (setq lsp-rust-analyzer-cargo-load-out-dirs-from-check t)
+;;     (setq lsp-rust-analyzer-proc-macro-enable t)
+;;     (setq lsp-rust-all-features t)
+;;     (setq lsp-completion-use-last-result t))
 
 
-  (when (avoc-run-mode-feature-enabled-p 'treemacs)
-    (use-package lsp-treemacs
-      :ensure t
-      :config
-      (lsp-treemacs-sync-mode 1)
-      :bind
-      ("C-c t s" . lsp-treemacs-symbols)
-      ("C-c t c" . lsp-treemacs-call-hierarchy)
-      ("C-c t t" . lsp-treemacs-type-hierarchy)
-      ("C-c t e" . lsp-treemacs-errors-list)))
+  ;; (when (avoc-run-mode-feature-enabled-p 'treemacs)
+  ;;   (use-package lsp-treemacs
+  ;;     :ensure t
+  ;;     :config
+  ;;     (lsp-treemacs-sync-mode 1)
+  ;;     :bind
+  ;;     ("C-c t s" . lsp-treemacs-symbols)
+  ;;     ("C-c t c" . lsp-treemacs-call-hierarchy)
+  ;;     ("C-c t t" . lsp-treemacs-type-hierarchy)
+  ;;     ("C-c t e" . lsp-treemacs-errors-list)))
 
-  (when (avoc-run-mode-feature-enabled-p 'lsp-ui)
-    (use-package lsp-ui
-      :ensure t
-      :commands lsp-ui-mode
-      :config
-      (setq lsp-ui-sideline-show-diagnostics t)
-      (setq lsp-ui-sideline-diagnostic-max-lines 10)
-      (setq lsp-ui-sideline-show-hover t)
-      (setq lsp-ui-sideline-show-code-actions t)
-      (setq lsp-ui-sideline-update-mode "point")
-      (setq lsp-ui-sideline-delay 0.2)
-      (setq lsp-ui-doc-enable t)
-      (setq lsp-ui-doc-delay 2.5)
-      (setq lsp-ui-doc-position 'at-point)
-      (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-      (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  ;; (when (avoc-run-mode-feature-enabled-p 'lsp-ui)
+  ;;   (use-package lsp-ui
+  ;;     :ensure t
+  ;;     :commands lsp-ui-mode
+  ;;     :config
+  ;;     (setq lsp-ui-sideline-show-diagnostics t)
+  ;;     (setq lsp-ui-sideline-diagnostic-max-lines 10)
+  ;;     (setq lsp-ui-sideline-show-hover t)
+  ;;     (setq lsp-ui-sideline-show-code-actions t)
+  ;;     (setq lsp-ui-sideline-update-mode "point")
+  ;;     (setq lsp-ui-sideline-delay 0.2)
+  ;;     (setq lsp-ui-doc-enable t)
+  ;;     (setq lsp-ui-doc-delay 2.5)
+  ;;     (setq lsp-ui-doc-position 'at-point)
+  ;;     (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  ;;     (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
 
-      :bind
-      ("C-c e e" . lsp-ui-flycheck-list)
-      ("C-c d" . lsp-ui-doc-show)))
+  ;;     :bind
+  ;;     ("C-c e e" . lsp-ui-flycheck-list)
+  ;;     ("C-c d" . lsp-ui-doc-show)))
 
   ;; Used by lsp-mode for applying code suggestions
   ;; Only used when lsp feature is active, since it's only used on it.
-  (use-package yasnippet
-    :ensure t
-    :after lsp-mode
-    :config (yas-global-mode 1)))
+  ;; (use-package yasnippet
+  ;;   :ensure t
+  ;;   :after lsp-mode
+  ;;   :config (yas-global-mode 1)))
 
 ;; exec-path-from-shell: Set the Emacs path value
 ;; to the value of the user shell PATH variable value.
@@ -317,7 +319,7 @@
     (company-minimum-prefix-length 2)
     (company-tooltip-flip-when-above t)
     (company-require-match nil)
-    
+
     :bind
     ("C-c SPC" . company-complete)
     ("C-c C-SPC" . company-complete)))
@@ -417,7 +419,7 @@
       (setq buffer (pop buffers))
       (if (not (string-equal (buffer-name buffer) "*scratch*")) (kill-buffer buffer) nil))))
 
-(defun clean-buffers() 
+(defun clean-buffers()
   (interactive)
   (if (yes-or-no-p "Do you really want to clean all buffers? ")
       (kill-buffers) nil))
@@ -515,21 +517,6 @@
 ;; visited buffers, would be cool.
 (global-set-key (kbd "C-<") 'last-buffer)
 
-
-;;;;;;;;;;;;;;;;;
-;; Other hooks ;;
-;;;;;;;;;;;;;;;;;
-
-;; This is practical to have it on prog-mode,
-;; plus fixes issues on lsp-ui trying to render on
-;; new lines and fucking up the GUI while coding.
-(add-hook 'prog-mode-hook
-	  (lambda () (setq truncate-lines t)))
-
-(add-hook 'before-save-hook
-          (lambda () (when (derived-mode-p 'prog-mode)
-               (delete-trailing-whitespace))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Work configuration ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
@@ -544,5 +531,5 @@
 ;; GC for cleaning up memory of Emacs initialization
 (garbage-collect)
 
-;; Setting up final 50MB GC threshold for supporting lsp-mode loads.
+;; Setting up final 100MB GC threshold..
 (setq gc-cons-threshold 100000000)
