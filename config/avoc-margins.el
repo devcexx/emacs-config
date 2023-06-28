@@ -8,6 +8,8 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'avoc-util)
+
 (defconst avoc-margins--minor-modes-table
   '(
     (flycheck-mode . (0 1 0 0))
@@ -62,10 +64,6 @@ LEFT-MARGIN RIGHT-FRINGE and RIGHT-MARGIN accordingly."
    avoc-margins--last-margins
    (setq-local avoc-margins--last-margins (avoc-margins--calculate-margins))))
 
-(defmacro avoc-margins--hook-for-mode (mode)
-  "The hook name for the given mode, expressed as a symbol in the MODE parameter."
-  `(intern (concat (symbol-name ,mode) "-hook")))
-
 (defun avoc-margins--base-margins-for-current-major-mode ()
   "Return the base margins for the current enabled major mode.
 This function uses the data from `avoc-margins--major-modes-table' to
@@ -101,95 +99,10 @@ mode."
 
 ;; Add hooks for relevant minor modes.
 (dolist (entry avoc-margins--minor-modes-table)
-  (add-hook (avoc-margins--hook-for-mode (car entry)) #'avoc-margins--after-relevant-mode-changed))
-
-;; Always catch up linum mode changes.
-(add-hook 'linum-mode-hook #'avoc-margins--after-relevant-mode-changed)
+  (add-hook (avoc-util-hook-for-mode (car entry)) #'avoc-margins--after-relevant-mode-changed))
 
 ;; Add hooks for relevant major modes.
 (dolist (entry avoc-margins--major-modes-table)
- (add-hook (avoc-margins--hook-for-mode (car entry)) #'avoc-margins--after-relevant-mode-changed))
-
-;; Don't let git-gutter manage the width of the margin.
-(advice-add
- 'git-gutter:set-window-margin
- :override
- (lambda (width) ()))
-
-;; Do the same with flycheck
-(when (avoc-run-mode-feature-enabled-p 'flycheck)
-  (advice-add
-   'flycheck-refresh-fringes-and-margins
-   :override
-   (lambda (width)
-     (when flycheck-current-errors
-       (apply 'flycheck-buffer)))))
-
-;; For fixing linum-mode margin issues I currently using a quite
-;; intrusive methods based on a few advices. Probably is not de most
-;; ideal solution, but who cares is my Emacs config.
-
-;; Intercept calls to window-margins when linum is being updated. In
-;; that case, fake the current margins of the window to force linum to
-;; always call set-window-margins and
-(advice-add
- 'window-margins
- :around
- (lambda (original-fun &optional win)
-   (if avoc-margins--linum-update-in-progress
-       (progn
-       (cons 0 0))
-     (apply original-fun (list win)))))
-
-;; Intercept any attempt from linum-mode to change the margins, and
-;; add the specific margins for the current buffer.
-(advice-add
- 'set-window-margins
- :around
- (lambda (original-fun win mleft mright)
-   (if avoc-margins--linum-update-in-progress
-       ;; linum-update-window in progress
-       (let*  (
-	       (last-margins (with-current-buffer (window-buffer win) (avoc-margins--last-margins)))
-	       (last-left (nth 1 last-margins))
-	       (last-right (nth 3 last-margins))
-	       (new-left (+ (or mleft 0) last-left))
-	       (new-right (+ (or mright 0) last-right)))
-	 (apply original-fun (list win new-left new-right)))
-
-     ;; otherwise
-     (apply original-fun (list win mleft mright))
-     )
-   )
- )
-
-;; Intercept linum mode updates and mark that currently linum is being
-;; updated.
-(advice-add
- 'linum-update-window
- :around
- (lambda (oldfun win)
-   (setq avoc-margins--linum-update-in-progress t)
-   (unwind-protect
-       (apply oldfun (list win))
-     (setq avoc-margins--linum-update-in-progress nil))
- ))
-
-;; Reprioritize some overlays to keep linum at the left of the margin,
-;; followed by the git-gutter. Flycheck overlays are kept on the
-;; rightmost, but doesn't need to be changed because they already have
-;; a priority by default of ~100.
-(advice-add
- 'overlay-put
- :after
- (lambda (ov key value)
-   (pcase key
-     (`linum-str
-      (setf (overlay-get ov 'priority) 5))
-     (`git-gutter
-      (setf (overlay-get ov 'priority) 10))
-     )))
+ (add-hook (avoc-util-hook-for-mode (car entry)) #'avoc-margins--after-relevant-mode-changed))
 
 (provide 'avoc-margins)
-
-;;; avoc-margins.el ends here

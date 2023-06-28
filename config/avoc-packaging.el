@@ -18,9 +18,6 @@
   (unless package-archive-contents
     (package-refresh-contents)))
 
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-
 ;; If variable set, then will print emacs startup time and write a
 ;; message when each file is loaded, for helping package loading
 ;; debugging.

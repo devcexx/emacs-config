@@ -1,6 +1,6 @@
-(setq comp-speed 2)
+(setq native-comp-speed 2)
 
-(setq comp-deferred-compilation-deny-list
+(setq native-comp-jit-compilation-deny-list
       '("\\(?:[/\\\\]\\.dir-locals\\.el$\\)"
         ;; Don't native-compile *-authloads.el and *-pkg.el files as they
         ;; seem to produce errors during native-compile.

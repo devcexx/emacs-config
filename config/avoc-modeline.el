@@ -9,7 +9,15 @@
   (use-package doom-modeline
     :ensure t
     :after all-the-icons
-    :config (doom-modeline-mode 1))
+    :config
+
+    ;; https://github.com/seagle0128/doom-modeline/issues/505
+    (setq doom-modeline-fn-alist
+      (--map
+       (cons (remove-pos-from-symbol (car it)) (cdr it))
+       doom-modeline-fn-alist))
+
+    (doom-modeline-mode 1))
 
   (when (avoc-run-mode-feature-enabled-p 'nyancat)
     (use-package nyan-mode ;; Essential

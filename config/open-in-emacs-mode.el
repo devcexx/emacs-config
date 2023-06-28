@@ -7,12 +7,12 @@
   "Handle a DBus call to OpenInEmacs function with the given ARGS."
   (unless (seq-every-p #'stringp args)
     (error (signal 'dbus-error "All the files must be strings")))
-  
+
   (dolist (file args)
     (condition-case err
 	(find-file-other-window file)
       (error (signal 'dbus-error (cdr err)))))
-  
+
   (let ((frame (window-frame (selected-window))))
     (make-frame-visible frame)
     (when window-system
@@ -37,7 +37,7 @@
     (setq open-in-emacs--dbus-object nil)))
 
 (defun open-in-emacs-available ()
-  (functionp 'dbus-register-service))
+  (boundp 'dbus-compiled-version))
 
 (define-minor-mode open-in-emacs-mode
   "Minor mode that enables opening files through a DBus request."

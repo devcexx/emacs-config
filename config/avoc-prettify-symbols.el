@@ -1,4 +1,4 @@
-;;; config-prettify-symbols.el --- Theme configuration
+;;; avoc-prettify-symbols.el --- Theme configuration
 ;;; Commentary:
 ;;; Code:
 
@@ -28,7 +28,7 @@
 	    (prettify-symbols-mode)
 	    ))
 
-(add-hook 'python-mode-hook
+(add-hook 'python-ts-mode-hook
 	  (lambda ()
 	    (setq prettify-symbols-alist
 		  (append
@@ -39,5 +39,5 @@
 	    (prettify-symbols-mode)
 	    ))
 
-(provide 'config-prettify-symbols)
-;;; config-prettify-symbols.el ends here
+(provide 'avoc-prettify-symbols)
+;;; avoc-prettify-symbols.el ends here

@@ -1,4 +1,4 @@
-;;; config-theme.el --- Theme configuration
+;;; avoc-theme.el --- Theme configuration
 ;;; Commentary:
 ;;; Code:
 
@@ -9,5 +9,5 @@
   (load-theme 'doom-Iosvkem t)
   (set-face-attribute 'tooltip nil :background "#132236"))
 
-(provide 'config-theme)
-;;; config-theme.el ends here
+(provide 'avoc-theme)
+;;; avoc-theme.el ends here

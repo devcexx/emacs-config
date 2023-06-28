@@ -54,5 +54,39 @@
 (setq auto-save-file-name-transforms
       `((".*" , (avoc-init-conf-rel-path "temp") t)))
 
+
+;; WindMove: move between buffers using shift+arrows
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
+
+(add-to-list 'load-path (avoc-init-conf-rel-path "buffer-move/"))
+(use-package buffer-move
+  :ensure nil
+  :bind
+  ("<C-S-up>" . buf-move-up)
+  ("<C-S-down>" . buf-move-down)
+  ("<C-S-left>" . buf-move-left)
+  ("<C-S-right>" . buf-move-right))
+
+(when (avoc-run-mode-feature-enabled-p 'undo-tree)
+  (use-package undo-tree
+    :ensure t
+    :config
+    ;; Prevent undo tree files from polluting your git repo
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+    :init (global-undo-tree-mode)))
+
+(column-number-mode t)
+
+;; Enable global hl mode
+(global-hl-line-mode 1)
+
+;; Enable active minibuffer lock mode
+(require 'active-minibuffer-lock-mode)
+(active-minibuffer-lock-mode 1)
+
+;; Highlight the minibuffer on enable
+(add-hook 'minibuffer-setup-hook #'avoc-util-minibuffer-emph)
+
 (provide 'avoc-basics)
 ;;; avoc-basics.el ends here

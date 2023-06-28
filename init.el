@@ -1,3 +1,5 @@
+
+
 ;;; init.el --- Emacs initialization file
 ;;; Commentary:
 ;;; Code:
@@ -25,138 +27,28 @@
     (require 'avoc-winsys-graphic)
   (require 'avoc-winsys-none))
 
-(require 'avoc-all-the-icons)
+(require 'avoc-icons)
 (require 'avoc-modeline)
-(require 'avoc-linum-relative)
 (require 'avoc-text-utils)
 
-(when (avoc-run-mode-feature-enabled-p 'flycheck)
-  (require 'config-flycheck))
-
 (when (avoc-run-mode-feature-enabled-p 'theme)
-  (require 'config-theme))
+  (require 'avoc-theme))
 
-(require 'config-prettify-symbols)
-(require 'config-git-gutter)
-
-(require 'active-minibuffer-lock-mode)
+(require 'avoc-prettify-symbols)
+(require 'avoc-git-gutter)
 (require 'open-in-emacs-mode)
 
 (require 'avoc-margins)
-
-;; Kawaii rainbow delimiters
-(use-package rainbow-delimiters
-  :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-;; Scrolling tweaking
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
-(setq mouse-wheel-progressive-speed t)
-(setq scroll-step 2)
-
-;; Fill column indicator
-(when (avoc-run-mode-feature-enabled-p 'fill-column-indicator)
-  (use-package fill-column-indicator
-    :ensure t
-    :config
-    (setq fci-rule-width 2)
-    (setq fci-rule-color "darkred")
-    (setq fci-rule-use-dashes nil)
-    (setq fci-rule-column 120))) ;; Keep disabled fci by default (gives problems with Company)
-
-;; Cursor highlight
-;; Only enabled when Emacs is running on a graphical interface
-(when (avoc-run-mode-feature-enabled-p 'position-beacon)
-  (use-package beacon
-    :ensure t
-    :config
-    (setq beacon-color "#fc20bb"))
-
-  ;; Disable beacon if we're on a tty
-  ;; Dunno why but it must to be done on window-setup-hook, otherwise it does
-  ;; not have any effect
-  (add-hook 'window-setup-hook (lambda () (if window-system (beacon-mode 1) (beacon-mode -1)))))
 
 (use-package browse-kill-ring
   :commands browse-kill-ring
   :ensure t)
 
-(when (avoc-run-mode-feature-enabled-p 'treemacs)
-  (use-package treemacs
-    :ensure t
-    :demand t
-    :config
-    (treemacs-fringe-indicator-mode 'always)
-    (treemacs-follow-mode -1)
-
-    ;; Only show Treemacs automatically when activated and there's any
-    ;; project to show. Otherwise, Treemacs will interactively ask
-    ;; user to add a new one, which is horrible to have it during
-    ;; Emacs initialization.
-    (when (and (avoc-run-mode-feature-enabled-p 'treemacs-autoshow) (not (treemacs-workspace->is-empty?)))
-      (add-hook 'window-setup-hook
-		(lambda ()
-		  (let ((last-window (selected-window)))
-		    (treemacs)
-		    (select-window last-window))
-		  )))
-
-    :bind
-    ([f8] . treemacs)
-    ("C-c t l" . treemacs-find-file))
-
-  (when (avoc-run-mode-feature-enabled-p 'projectile)
-    (use-package treemacs-projectile
-      :ensure t
-      :after treemacs projectile
-      :bind ("C-x p a" . treemacs-add-project))))
-
-;; WindMove: move between buffers using shift+arrows
-(when (fboundp 'windmove-default-keybindings)
-  (windmove-default-keybindings))
-
-(add-to-list 'load-path (avoc-init-conf-rel-path "buffer-move/"))
-(use-package buffer-move
-  :ensure nil
-  :bind
-  ("<C-S-up>" . buf-move-up)
-  ("<C-S-down>" . buf-move-down)
-  ("<C-S-left>" . buf-move-left)
-  ("<C-S-right>" . buf-move-right))
-
-(require 'config-prettify-symbols)
-
-;; Enable line numbers
-(when (avoc-run-mode-feature-enabled-p 'linum)
-  (dolist (hook '(prog-mode-hook text-mode-hook))
-    (add-hook hook #'linum-mode 1))
-
-  ;; I have an issue on my Emacs, where the margin gets completely
-  ;; fucked up when zooming in and out, and seems to be related to the
-  ;; linum-mode. Disable and enable it each time the scale factor
-  ;; changes as a workaround.
-  (add-hook 'text-scale-mode-hook
-	    (lambda () (when linum-mode (linum-mode -1) (linum-mode 1)))))
-
-(column-number-mode t)
-
-;; Enable global hl mode
-(global-hl-line-mode 1)
-
-;; Enable active minibuffer lock mode
-(active-minibuffer-lock-mode 1)
+(require 'avoc-prettify-symbols)
 
 ;; Enable Open In Emacs mode
 (when (and (open-in-emacs-available) (avoc-run-mode-feature-enabled-p 'open-in-emacs))
   (open-in-emacs-mode 1))
-
-;; Highlight the minibuffer on enable
-(add-hook 'minibuffer-setup-hook #'avoc-util-minibuffer-emph)
-
-(when (avoc-util-check-emacs-28)
-  ;; TODO Change tab-line-tabs-function to filter special buffers
-  ;; (like helm, messages...) ?
-  (add-hook 'change-major-mode-hook (lambda () (global-tab-line-mode 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General puropose packages ;;
@@ -171,116 +63,22 @@
   (setq elcord-silent-mode 1)
   (elcord-mode))
 
-(use-package smartparens
-  :ensure t
-  :init
-  (require 'smartparens-config)
-  :config
-  (set-face-attribute 'sp-show-pair-match-content-face nil :background "#5a5d5e")
-  :bind
- ; ("M-[" . sp-beginning-of-sexp)
-  ("M-]" . sp-end-of-sexp)
-  ("M-{" . sp-unwrap-sexp)
-  ("M-}" . sp-backward-unwrap-sexp)
-  :hook
-  (prog-mode . show-smartparens-mode)
-  (prog-mode . smartparens-mode))
-
-(when (avoc-run-mode-feature-enabled-p 'undo-tree)
-  (use-package undo-tree
-    :ensure t
-    :init (global-undo-tree-mode)))
-
 (use-package which-key
   :ensure t
   :init (which-key-mode 1))
 
-;; LSP Mode
-(when (avoc-run-mode-feature-enabled-p 'lsp)
-  (use-package lsp-mode
-    :ensure t
-    :commands (lsp lsp-deferred)
-    :hook
-    (lsp-mode . lsp-signature-activate)
-    (lsp-mode . lsp-ui-mode)
-    :config
-    (require 'lsp-lens)
-    :init
-    (setq lsp-keymap-prefix "C-c")
-    (setq lsp-lens-auto-enable t)
-    (setq lsp-headerline-breadcrumb-enable t)
-    (setq lsp-signature-auto-activate '(:on-trigger-char :on-server-request))
-    (setq lsp-signature-render-documentation nil)
+(require 'avoc-tree-sitter)
+(require 'avoc-prog)
+(require 'avoc-projects)
 
-    (setq lsp-rust-analyzer-display-chaining-hints t)
-    (setq lsp-rust-analyzer-display-parameter-hints t)
-    (setq lsp-rust-analyzer-server-display-inlay-hints t)
-    (setq lsp-rust-analyzer-inlay-hints-mode t)
-    (setq lsp-rust-analyzer-cargo-load-out-dirs-from-check t)
-    (setq lsp-rust-analyzer-proc-macro-enable t)
-    (setq lsp-rust-all-features t)
-    (setq lsp-completion-use-last-result t))
-
-
-  (when (avoc-run-mode-feature-enabled-p 'treemacs)
-    (use-package lsp-treemacs
-      :ensure t
-      :config
-      (lsp-treemacs-sync-mode 1)
-      :bind
-      ("C-c t s" . lsp-treemacs-symbols)
-      ("C-c t c" . lsp-treemacs-call-hierarchy)
-      ("C-c t t" . lsp-treemacs-type-hierarchy)
-      ("C-c t e" . lsp-treemacs-errors-list)))
-
-  (when (avoc-run-mode-feature-enabled-p 'lsp-ui)
-    (use-package lsp-ui
-      :ensure t
-      :commands lsp-ui-mode
-      :config
-      (setq lsp-ui-sideline-show-diagnostics t)
-      (setq lsp-ui-sideline-diagnostic-max-lines 10)
-      (setq lsp-ui-sideline-show-hover t)
-      (setq lsp-ui-sideline-show-code-actions t)
-      (setq lsp-ui-sideline-update-mode "point")
-      (setq lsp-ui-sideline-delay 0.2)
-      (setq lsp-ui-doc-enable t)
-      (setq lsp-ui-doc-delay 2.5)
-      (setq lsp-ui-doc-position 'at-point)
-      (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-      (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
-
-      :bind
-      ("C-c e e" . lsp-ui-flycheck-list)
-      ("C-c d" . lsp-ui-doc-show)))
-
-  ;; Used by lsp-mode for applying code suggestions
-  ;; Only used when lsp feature is active, since it's only used on it.
-  (use-package yasnippet
-    :ensure t
-    :after lsp-mode
-    :config (yas-global-mode 1)))
+(when (avoc-run-mode-feature-enabled-p 'linum)
+  (require 'avoc-line-numbers))
 
 ;; exec-path-from-shell: Set the Emacs path value
 ;; to the value of the user shell PATH variable value.
 (use-package exec-path-from-shell
   :ensure t
   :hook (after-init . exec-path-from-shell-initialize))
-
-;; Projectile: project management for Emacs
-(when (avoc-run-mode-feature-enabled-p 'projectile)
-  (use-package projectile
-    :ensure t
-    :config
-    (projectile-mode)
-    (setq projectile-enable-caching t))
-
-  (when (avoc-run-mode-feature-enabled-p 'helm)
-    (use-package helm-projectile
-      :ensure t
-      :after ((projectile))
-      :bind (("C-x p p" . helm-projectile)
-             ("C-x p P" . helm-projectile-switch-project)))))
 
 ;; Helm: enhaced completion window.
 (when (avoc-run-mode-feature-enabled-p 'helm)
@@ -296,7 +94,9 @@
 	  helm-candidate-number-limit 500
 	  helm-buffers-fuzzy-matching t
 	  helm-recentf-fuzzy-match t
-	  helm-M-x-fuzzy-match t)))
+	  helm-M-x-fuzzy-match t)
+
+    (define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)))
 
 ;; Multi-term: terminal for emacs.
 (use-package multi-term
@@ -317,7 +117,7 @@
     (company-minimum-prefix-length 2)
     (company-tooltip-flip-when-above t)
     (company-require-match nil)
-    
+
     :bind
     ("C-c SPC" . company-complete)
     ("C-c C-SPC" . company-complete)))
@@ -348,68 +148,6 @@
   :hook
   (prog-mode . hl-todo-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Language-specific packages ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Markdown-mode
-(use-package markdown-mode
-  :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
-
-;; toc-org for generating Table Of Contents automatically in org.
-(use-package toc-org
-  :ensure t
-  :hook
-  (org-mode . toc-org-mode)
-
-  :bind
-  ("C-c C-o" . toc-org-markdown-follow-thing-at-point))
-
-;; autex: LaTeX integration
-(use-package auctex
-  :ensure t
-  :mode ("\\.tex\\'" . latex-mode)
-  :hook (latex-mode . lsp-deferred))
-
-;; js2-mode: Javascript integration
-(use-package js2-mode
-  :ensure t
-  :mode
-  ("\\.js\\'" . js2-mode)
-  ("\\.jsx\\'" . js2-jsx-mode)
-  :config
-  (define-key js2-mode-map (kbd "M-.") nil)
-  :bind (("C-x n" . js2-next-error)))
-
-(use-package typescript-mode
-  :ensure t
-  :mode ("\\.ts\\'" . typescript-mode)
-  :hook
-  (typescript-mode . lsp-deferred))
-
-(use-package web-mode
-  :ensure t
-  :mode ("\\.tsx\\'" . web-mode)
-  :hook (web-mode . lsp-deferred))
-
-;; Rust integration
-(use-package toml-mode
-  :mode ("\\.toml\\'" . toml-mode)
-  :ensure t)
-
-(use-package rustic
-  :ensure t
-  :mode ("\\.rs\\'" . rustic-mode)
-  :init
-  (setq rustic-lsp-setup-p nil)
-  :hook (rustic-mode . lsp-deferred)
-  :bind (("C-c C-c f" . rustic-format-file)))
-
 (defun kill-buffers()
   (let (buffer buffers)
     (setq buffers (buffer-list))
@@ -417,30 +155,12 @@
       (setq buffer (pop buffers))
       (if (not (string-equal (buffer-name buffer) "*scratch*")) (kill-buffer buffer) nil))))
 
-(defun clean-buffers() 
+(defun clean-buffers()
   (interactive)
   (if (yes-or-no-p "Do you really want to clean all buffers? ")
       (kill-buffers) nil))
 
 (provide 'clean-buffers)
-
-(defun projectile-kill-non-project-buffers ()
-  "Kill all the buffers that doesn't belong to the current project."
-
-  (interactive)
-  (let ((root (projectile-project-root)) (bufs (buffer-list (selected-frame))))
-    (when (null root) (user-error "Not in a Projectile buffer"))
-    (when (yes-or-no-p (format "Do you want to kill all the buffers that doesn't belong to \"%s\"? " root))
-      (dolist (buf bufs)
-	(let ((buf-name (buffer-name buf)))
-	  ; " ?" -> Treemacs buffers has an space at the beginning, because potato.
-	  (unless (or (projectile-project-buffer-p buf root)
-		      (string-match "^ ?\\*\\(\\scratch\\|Messages\\|Treemacs\\|tab-line-hscroll\\)" buf-name))
-
-	    (message "Killing buffer '%s'" buf-name)
-            (kill-buffer buf)))))))
-
-(provide 'projectile-kill-non-project-buffers)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Special keybindings ;;
@@ -492,11 +212,6 @@
 
 (global-set-key (kbd "C-S-L") (kbd "C-SPC C-SPC"))
 
-;; Used for hiding buffers without closing them, especially for tabs
-;; mode.
-(global-set-key (kbd "C-x k") 'bury-buffer)
-(global-set-key (kbd "C-x K") 'kill-buffer)
-
 ;; Navigation keybindings
 (global-set-key (kbd "C-,") 'previous-buffer)
 (global-set-key (kbd "C-.") 'next-buffer)
@@ -504,31 +219,6 @@
 ;; Debug keybindings
 (global-set-key (kbd "C-x & ,") (lambda () (interactive) (profiler-start 'cpu+mem)))
 (global-set-key (kbd "C-x & .") (lambda () (interactive) (profiler-stop) (profiler-report)))
-
-(defun last-buffer ()
-  (interactive)
-  (switch-to-buffer (other-buffer nil)))
-(provide 'prev-buffer)
-
-;; Previous buffer
-;; TODO Improve with some sort of list of last recent
-;; visited buffers, would be cool.
-(global-set-key (kbd "C-<") 'last-buffer)
-
-
-;;;;;;;;;;;;;;;;;
-;; Other hooks ;;
-;;;;;;;;;;;;;;;;;
-
-;; This is practical to have it on prog-mode,
-;; plus fixes issues on lsp-ui trying to render on
-;; new lines and fucking up the GUI while coding.
-(add-hook 'prog-mode-hook
-	  (lambda () (setq truncate-lines t)))
-
-(add-hook 'before-save-hook
-          (lambda () (when (derived-mode-p 'prog-mode)
-               (delete-trailing-whitespace))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Work configuration ;;
@@ -544,5 +234,5 @@
 ;; GC for cleaning up memory of Emacs initialization
 (garbage-collect)
 
-;; Setting up final 50MB GC threshold for supporting lsp-mode loads.
+;; Setting up final 100MB GC threshold.
 (setq gc-cons-threshold 100000000)

@@ -20,11 +20,11 @@
    '(git-gutter:deleted-sign "┃")
    '(git-gutter:unchanged-sign nil)
    )
-  
+
   (set-face-foreground 'git-gutter:modified git-gutter-color-modified)
   (set-face-foreground 'git-gutter:added git-gutter-color-added)
   (set-face-foreground 'git-gutter:deleted git-gutter-color-deleted)
   (set-face-background 'git-gutter:unchanged nil)
   (global-git-gutter-mode +1))
 
-(provide 'config-git-gutter)
+(provide 'avoc-git-gutter)

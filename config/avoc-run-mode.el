@@ -37,7 +37,6 @@ There are a few run modes that might fit different use cases:
        treemacs
        treemacs-autoshow
        fill-column-indicator
-       flycheck
        company
        helm
        git
@@ -60,7 +59,7 @@ There are a few run modes that might fit different use cases:
        lsp-ui
        undo-tree))
 
-    (light . (linum undo-tree company flycheck helm))))
+    (light . (linum undo-tree company helm))))
 
 (defmacro avoc-run-mode-features-enabled ()
   "Return the list of features currently enabled by the run mode."

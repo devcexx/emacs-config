@@ -1,4 +1,6 @@
-* Emacs Avocado
+#+OPTIONS: broken-links:t
+
+* Emacs Avoc
 
   This is my Emacs configuration file. I've started a long time ago and
   I still making it changes from time to time. There are some things
@@ -8,19 +10,34 @@
   configuration or package download is required to make it work (or, at
   least, that's the objective).
 
-** Why is it called Avocado?
-
-   Because I was needing a name so I can use it for naming
-   configuration files and symbols under the same prefix. And of
-   course, the first candidate for that was Avocado (a.k.a =avoc= for
-   shorten) because, well, it's awesome, like this config.
+  This configuration only supports the version of Emacs I typically
+  use, which in this case is Emacs 29.
 
 ** Table of Contents :TOC_2_gh:
-- [[#emacs-avocado][Emacs Avocado]]
-  - [[#why-is-it-called-avocado][Why is it called Avocado?]]
+- [[#emacs-avoc][Emacs Avoc]]
 - [[#installing][Installing]]
   - [[#are-you-on-windows][Are you on Windows?]]
   - [[#macos-support][macOS support]]
+- [[#features][Features]]
+  - [[#platform-support][Platform support]]
+  - [[#run-modes][Run modes]]
+  - [[#open-in-emacs][Open In Emacs]]
+  - [[#terminal-clip][Terminal Clip]]
+  - [[#theme][Theme]]
+  - [[#modeline][Modeline]]
+  - [[#line-numbers][Line numbers]]
+  - [[#programming-languages][Programming languages]]
+  - [[#git][Git]]
+  - [[#projects][Projects]]
+  - [[#discord-integration][Discord integration]]
+  - [[#minibuffer-lock][Minibuffer lock]]
+  - [[#icons][Icons]]
+- [[#cheatsheet][Cheatsheet]]
+  - [[#basics][Basics]]
+  - [[#file-navigation--basic-edition][File navigation / basic edition]]
+  - [[#coding][Coding]]
+  - [[#project-management][Project management]]
+  - [[#misc][Misc]]
 
 * Installing
 
@@ -32,11 +49,272 @@
 
 ** Are you on Windows?
 
-   Well, that's your problem dude.
+   Well, that's your problem.
 
 ** macOS support
 
-   I'm not a common user of macOS, but I did. This means that I'm not
-   testing whether the new updates works on macOS or not. Nevertheless,
-   there's a line on the [../init.el#L13](init.el) file so the macOS users
-   can use the left alt key as the meta key on Emacs.
+   I daily use a macOS laptop for work, so macOS support is provided.
+
+* Features
+
+** Platform support
+
+   The configuration supports windowed and tty-based Emacs. Emacs
+   client is not supported.
+
+** Run modes
+
+   This configuration allows to enable and disable emacs features
+   based on its purpose. If you are gonna use it as main editor, you
+   may start Emacs normally. However, if you're gonna use it for
+   editing a single file or in a remote server, the modes "spot" and
+   "light" are provided. These modes enables or disables features so
+   Emacs can run on a more lightweight way based on what you're gonna
+   do with it. The run mode can be set by setting the environment
+   variable EMACS_RUN_MODE.
+
+** Open In Emacs
+
+   This feature is only supported in Linux and it requires dbus to be
+   operative. It allows you to run a command to open a file directly
+   in the already opened Emacs instance, so you can navigate through
+   your filesystem and open files in a same Emacs instance (since
+   Emacsclient is not supported). For using it, put the bin/ folder of
+   this repository into your PATH and execute the command oie in your
+   terminal with the path to the file to open.
+
+** Terminal Clip
+
+   This feature provides clipboard support to Emacs when running from
+   terminal. Since when Emacs starts from the terminal completely
+   disables X support, it also disables clipboard integration, which
+   can be painful if you typically use Emacs from the
+   terminal. Support for clipboard is provided through
+   [[https://github.com/devcexx/terminal-clip.el][terminal-clip.el]] library. Integration in this config file allows to
+   automatically build the native libraries required.
+
+** Theme
+
+   The theme chosen is [[https://github.com/neutaaaaan/iosvkem][Doom-Iosvkem]].
+
+** Modeline
+
+   The modeline used is powered by doom-modeline.
+
+** Line numbers
+
+   Line number support is provided by the display-line-numbers-mode
+   feature. Some extra [[https://github.com/devcexx/emacs-config/blob/00cb55c3da42649505f0b4b26029ef471e824b21/config/avoc-line-numbers.el#L24][tweaks]] have been done for preventing glitches
+   on the width of the line number width.
+
+** Programming languages
+
+   Syntax highlighting is supported through Tree-Sitter. The
+   configuration will automatically clone and compile all the
+   tree-sitter modules required for syntax highlighting.
+
+   LSP support is provided through Eglot. Additionally, error
+   highlighting is provided by FlyMake and completion by
+   Company. Automatic initialization of Eglot is disabled, so you'll
+   need to type ~M-x eglot~ for starting it. This is intended for
+   preventing starting a heavy LSP application for performing spot
+   changes on files not included in any project.
+
+   The following languages are supported out-of-the-box (although
+   you'll need to set up their own LSPs in your system before using
+   them):
+   
+   - C
+   - C++
+   - CMake
+   - Toml
+   - CSS
+   - HTML
+   - JavaScript
+   - JSON
+   - LaTeX
+   - Python
+   - Ruby
+   - Rust
+   - Shell Scripts
+   - SQL
+   - TypeScript / TSX
+
+** Git
+
+   Git support is provided through Magit and Git-Gutter.
+
+** Projects
+
+   Project support is provided through Projectile and Treemacs.
+
+** Discord integration
+
+   Integration with discord is provided through Elcord, that will
+   allow to show Emacs in your current Discord status.
+
+** Minibuffer lock
+
+   Minibuffer lock is a global minor mode that allows you to focus on
+   the minibuffer when it is opened for typing. It prevents that the
+   minibuffer focus is lost if it is still waiting for an input, and
+   emits acoustic and visual effects for grabbing your attention to
+   it.
+
+** Icons
+
+   All The Icons and Nerd Icons are supported. The configuration will
+   automatically download and install the fonts if it detects they're
+   missing from the system.
+
+* Cheatsheet
+
+** Basics
+
+|---------------------+-------------+----------------+-------------------------------------------------------------------------------|
+| Action              | Keybinding  | Command        | Notes                                                                         |
+|---------------------+-------------+----------------+-------------------------------------------------------------------------------|
+| Select left window  | S-<left>    | windmove-left  |                                                                               |
+|---------------------+-------------+----------------+-------------------------------------------------------------------------------|
+| Select right window | S-<right>   | windmove-right |                                                                               |
+|---------------------+-------------+----------------+-------------------------------------------------------------------------------|
+| Select window above | S-<up>      | windmove-up    |                                                                               |
+|---------------------+-------------+----------------+-------------------------------------------------------------------------------|
+| Select window below | S-<down>    | windmove-down  |                                                                               |
+|---------------------+-------------+----------------+-------------------------------------------------------------------------------|
+| Swap left window    | C-S-<left>  | buf-move-left  | Swap the position of the current selected window with the window on the left  |
+|---------------------+-------------+----------------+-------------------------------------------------------------------------------|
+| Swap right window | C-S-<right> | buf-move-right | Swap the position of the current selected window with the window on the right |
+|---------------------+-------------+----------------+-------------------------------------------------------------------------------|
+| Swap window above | C-S-<up>    | buf-move-up    | Swap the position of the current selected window with the window above        |
+|---------------------+-------------+----------------+-------------------------------------------------------------------------------|
+| Swap window below | C-S-<down>  | buf-move-down  | Swap the position of the current selected window with the window below        |
+
+** File navigation / basic edition
+
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Action                                   | Keybinding         | Command                             | Notes                                                                                    |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Go to the end of file                    | M->; C-x ]; <home> | beginning-of-buffer                 |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Go to the beginning of file              | M-<; C-x [; <end>  | end-of-buffer                       |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Go to the beginning of the current sexp  | C-c [              | sp-beginning-of-sexp                |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Activate / Deactivate mark               | C-SPC              | set-mark-command                    |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Activate and deactivate mark, at once    | C-S-L              | set-mark-command; set-mark-command  |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Pop mark                                 | C-u C-SPC          |                                     |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Pop global mark                          | C-x C-SPC          | pop-global-mark                     |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Delete line                              | C-k                | avoc-text-utils-delete-current-line | This command differs from kill-line in that the line is not copied into the kill ring.   |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Kill line                                | M-k                | kill-line                           |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Kill previous word                       | M-<backspace>      | backward-kill-word                  |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Kill word                                | M-<delete>         | kill-word                           |                                                                                          |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+| Duplicate line                           | C-c n              | avoc-text-utils-duplicate-line      | Universal argument can be used to determine number of times the line will be copied. Key n can be pressed more times after the command for keeping duplicating the line |
+|------------------------------------------+--------------------+-------------------------------------+------------------------------------------------------------------------------------------|
+
+
+** Coding
+
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Action                                   | Keybinding         | Command                       | Notes                                                |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| LSP: Rename                              | C-c e r ]          | eglot-rename                  |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| LSP: Apply code actions                  | C-c e a            | eglot-code-actions            |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Show Eldoc buffer                        | C-c e d            | eldoc-doc-buffer              |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Open Magit                               | C-x v v            | magit-status                  |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Open auto complete                       | C-c SPC; C-c C-SPC | company-complete              |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Comment line                             | M-;                | comment-line                  |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Comment dwim                             | C-x ;              | comment-dwim                  |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Comment set column                       | C-x M-;            | comment-set-column            |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Flymake goto next error                  | C-c f n            | flymake-goto-next-error       |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Flymake goto previous error              | C-c f p            | flymake-goto-previous-error   |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Goto next TODO                           | C-c C-t n          | hl-todo-next                  | Supported keywords: TODO, FIXME, DEBUG, GOTCHA, STUB |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Goto previous TODO                       | C-c C-t p          | hl-todo-previous              | Supported keywords: TODO, FIXME, DEBUG, GOTCHA, STUB |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| List all the TODO keywords               | C-c C-t o          | hl-todo-occur                 | Supported keywords: TODO, FIXME, DEBUG, GOTCHA, STUB |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Insert TODO keyword                      | C-c C-t i          | hl-todo-insert                | Supported keywords: TODO, FIXME, DEBUG, GOTCHA, STUB |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Find references                          | M-.                | xref-find-references          |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| XRef go back                             | M-,                | xref-go-back                  |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Goto next git modified hunk              | C-x v n            | git-gutter:next-hunk          |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Goto previous git modified hunk          | C-x v p            | git-gutter:previous-hunk      |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Go to the end of the current sexp        | C-c ]              | sp-end-of-sexp                |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Go to the beginning of the next sexp     | C-c {              | sp-beginning-of-next-sexp     |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Go to the beginning of the previous sexp | C-c }              | sp-beginning-of-previous-sexp |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Unwrap current sexp                      | C-c M-{            | sp-unwrap-sexp                |                                                      |
+|------------------------------------------+--------------------+-------------------------------+------------------------------------------------------|
+| Unwrap previous sexp                     | C-c M-}            | sp-backward-unwrap-sexp       |                                                      |
+
+
+** Project management
+
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| Action                                     | Keybinding | Command                                 | Notes |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| Add project to Treemacs current worksplace | C-x p a    | treemacs-add-project                    |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| Open project file                          | C-x p p    | helm-projectile                         |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| Switch project                             | C-x p P    | helm-projectile-switch-project          |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| Kill non-project buffers                   | C-x p M-k  | projectile-kill-non-project-buffers     |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| Toggle Treemacs open                       | <f8>       | treemacs                                |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| Find current file in Treemacs              | C-c t l    | treemacs-find-file                      |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| [Treemacs] Remove project from worksplace  | C-c C-p d  | treemacs-remove-project-from-worksplace |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| [Treemacs] New file                        | c f        | treemacs-create-file                    |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| [Treemacs] New folder                      | c d        | treemacs-create-dir                     |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| [Treemacs] Rename file                     | R          | treemacs-rename-file                    |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| [Treemacs] Expand/Collapse node            | TAB        | treemacs-TAB-action                     |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| [Treemacs] Open file with vertical split   | o v        | treemacs-visit-node-vertical-split      |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+| [Treemacs] Open file with horizontal split | o h        | treemacs-visit-node-horizontal-split    |       |
+|--------------------------------------------+------------+-----------------------------------------+-------|
+
+** Misc
+
+|------------------------+------------+--------------------------------+-------|
+| Action                 | Keybinding | Command                        | Notes |
+|------------------------+------------+--------------------------------+-------|
+| Kill all buffers       | C-x C-k    | clean-buffers                  |       |
+|------------------------+------------+--------------------------------+-------|
+| Profiler start         | C-x & ,    | profiler-start                 |       |
+|------------------------+------------+--------------------------------+-------|
+| Profiler stop & report | C-x & .    | profiler-stop; profiler-report |       |
+|------------------------+------------+--------------------------------+-------|
+| Open terminal          | C-x t      | multi-term-dedicated-open      |       |
+|------------------------+------------+--------------------------------+-------|
