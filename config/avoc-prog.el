@@ -111,6 +111,13 @@
 (dolist (mode avoc-prog-eglot-enabled-mode-alist)
   (add-hook (avoc-util-hook-for-mode mode) 'eglot-ensure))
 
+;; Extra configuration for eglot server programs
+(add-to-list 'eglot-server-programs
+	     `((rust-ts-mode rust-mode) . ("rust-analyzer" :initializationOptions
+					   ( :procMacros (:enable t)
+					     :cargo ( :buildScripts (:enable t)
+						      :features "all")))))
+
 
 ;; Install specific modes for modes not supported by tree-sitter by
 ;; default nor are available by default in Emacs.
