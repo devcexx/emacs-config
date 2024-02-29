@@ -37,7 +37,7 @@
     (setq open-in-emacs--dbus-object nil)))
 
 (defun open-in-emacs-available ()
-  (boundp 'dbus-compiled-version))
+  (and (boundp 'dbus-compiled-version) (boundp 'dbus-register-service)))
 
 (define-minor-mode open-in-emacs-mode
   "Minor mode that enables opening files through a DBus request."
