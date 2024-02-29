@@ -76,9 +76,10 @@
 
 ;; exec-path-from-shell: Set the Emacs path value
 ;; to the value of the user shell PATH variable value.
-(use-package exec-path-from-shell
-  :ensure t
-  :hook (after-init . exec-path-from-shell-initialize))
+(when window-system
+  (use-package exec-path-from-shell
+    :ensure t
+    :hook (after-init . exec-path-from-shell-initialize)))
 
 ;; Helm: enhaced completion window.
 (when (avoc-run-mode-feature-enabled-p 'helm)
