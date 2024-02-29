@@ -27,6 +27,8 @@
 
 (global-set-key (kbd "C-x x e") (lambda () (interactive) (eglot-ensure)))
 
+;; Disable eglot change confirmations
+(setq eglot-confirm-server-initiated-edits nil)
 
 ;; Required for snippet-based completion through eglot. Not having
 ;; this enabled may produce that some LSP servers, such as the
