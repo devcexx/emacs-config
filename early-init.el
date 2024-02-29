@@ -9,6 +9,13 @@
 
 ;; Disable bars and unnecesary menus
 (tooltip-mode -1)
-(tool-bar-mode -1)
+
+;; Some times during init the tool-bar-mode is not available, not sure
+;; why.
+(when (functionp 'tool-bar-mode)
+  (tool-bar-mode -1))
+
 (menu-bar-mode -1)
-(scroll-bar-mode -1)
+
+(when (functionp 'scroll-bar-mode)
+  (scroll-bar-mode -1))

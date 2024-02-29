@@ -12,7 +12,7 @@
 (require 'avoc-util)
 
 ;; Automatically install tree-sitter languages
-(avoc-tree-sitter-auto-install-langs)
+(avoc-tree-sitter-auto-install-langs t)
 
 (define-key flymake-mode-map (kbd "C-c f n") #'flymake-goto-next-error)
 (define-key flymake-mode-map (kbd "C-c f p") #'flymake-goto-previous-error)

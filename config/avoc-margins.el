@@ -95,7 +95,11 @@ mode."
 (setq-default right-margin-width 0)
 (setq-default left-fringe-width 0)
 (setq-default right-fringe-width 0)
-(fringe-mode '(0 . 0))
+
+;; Fringe mode is only available on Emacs distributions built with
+;; graphical support.
+(when (boundp 'fringe-mode)
+  (fringe-mode '(0 . 0)))
 
 ;; Add hooks for relevant minor modes.
 (dolist (entry avoc-margins--minor-modes-table)
