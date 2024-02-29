@@ -9,6 +9,34 @@
 ;; Disable lock file creation.
 (require 'avoc-util)
 (require 'avoc-run-mode)
+(require 'cl-lib)
+
+(defvar kill-buffers-exclude-alist
+  '("*scratch*"
+    "*Messages*"
+    (lambda (buffer-name) (string-prefix-p " *Treemacs-Scoped-Buffer-" buffer-name))))
+
+(defun kill-buffers()
+  (let (buffer buffers)
+    (setq buffers (buffer-list))
+    (dotimes (i (length buffers))
+      (let ((buffer (pop buffers))
+	    (bufname (buffer-name buffer)))
+	(when
+	    (not (cl-some
+	     (lambda (excluded-buffer-elem)
+	       (cond ((stringp excluded-buffer-elem) (string-equal bufname excluded-buffer-elem))
+		     ((functionp excluded-buffer-elem) (apply excluded-buffer-elem (cons bufname ())))
+		     (t nil))) kill-buffers-exclude-alist))
+	   (kill-buffer bufname))))))
+
+(defun clean-buffers()
+  (interactive)
+  (if (yes-or-no-p "Do you really want to clean all buffers? ")
+      (kill-buffers) nil))
+
+(provide 'clean-buffers)
+
 (setq create-lockfiles nil)
 
 ;; Enable delete selection mode by default. I hate the default
