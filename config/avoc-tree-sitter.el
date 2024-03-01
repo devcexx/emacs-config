@@ -21,7 +21,9 @@ building missing treesitter modules."
         (make . ("https://github.com/alemuller/tree-sitter-make"))
         (markdown . ("https://github.com/MDeiml/tree-sitter-markdown" nil "tree-sitter-markdown/src"))
         (python . ("https://github.com/tree-sitter/tree-sitter-python"))
-        (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src"))
+
+	;; TODO Fixing TS version to v0.20.3 because of a weird bug in emacs 29.2 (ef01b634d219bcceda17dcd61024c7a12173b88c)
+        (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
         (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src"))
         (ruby . ("https://github.com/tree-sitter/tree-sitter-ruby"))
         (rust . ("https://github.com/tree-sitter/tree-sitter-rust"))
