@@ -95,7 +95,8 @@
 	  helm-candidate-number-limit 500
 	  helm-buffers-fuzzy-matching t
 	  helm-recentf-fuzzy-match t
-	  helm-M-x-fuzzy-match t)
+	  helm-M-x-fuzzy-match t
+	  helm-move-to-line-cycle-in-source nil)
 
     (define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)))
 
