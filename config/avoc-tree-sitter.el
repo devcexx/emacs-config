@@ -17,7 +17,6 @@ building missing treesitter modules."
         (html . ("https://github.com/tree-sitter/tree-sitter-html"))
         (json . ("https://github.com/tree-sitter/tree-sitter-json"))
         (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
-	(latex . ("https://github.com/latex-lsp/tree-sitter-latex"))
         (make . ("https://github.com/alemuller/tree-sitter-make"))
         (markdown . ("https://github.com/MDeiml/tree-sitter-markdown" nil "tree-sitter-markdown/src"))
         (python . ("https://github.com/tree-sitter/tree-sitter-python"))

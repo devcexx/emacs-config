@@ -13,11 +13,18 @@
     (projectile-mode)
     (setq projectile-enable-caching t))
 
+  (use-package ag
+    :ensure t)
+
+  (use-package helm-ag
+    :ensure t)
+
   (when (avoc-run-mode-feature-enabled-p 'helm)
     (use-package helm-projectile
       :ensure t
       :after ((projectile))
       :bind (("C-x p p" . helm-projectile)
+	     ("C-x p s" . helm-projectile-ag)
              ("C-x p P" . helm-projectile-switch-project)))))
 
 (when (avoc-run-mode-feature-enabled-p 'treemacs)
